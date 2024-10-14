@@ -38,9 +38,29 @@ private fun Magnitude(mypoint: Pair<Double, Double>): Double {
     return sqrt(DotProduct(mypoint, mypoint))
 }
 
-//private fun DeltaDistance(mypoints: Pair<Double, Double>): Array<Pair<Double, Double>>
+private fun DeltaDistance(mypoints: Array<Pair<Double, Double>>): Array<Pair<Double, Double>> {
+    val delta = Array(COMBOS) { Pair(0.0, 0.0) }
+    var index = 0
+    for (i in 0 until TESTSIZE - 1) {
+        for (j in i + 1 until TESTSIZE) {
+            delta[index] = Pair(mypoints[i].first - mypoints[j].first, mypoints[i].second - mypoints[j].second)
+            index++
+        }
+    }
+    return delta
+}
 
-//private fun MeanPoint(mypoints: Pair<Double, Double>): Pair<Double, Double>
+private fun MeanPoint(mypoints: Array<Pair<Double, Double>>): Pair<Double, Double> {
+    var mean_x = 0.0
+    var mean_y = 0.0
+    for (point in mypoints) {
+        mean_x += point.first
+        mean_y += point.second
+    }
+    mean_x /= mypoints.size
+    mean_y /= mypoints.size
+    return Pair(mean_x, mean_y)
+}
 
 private fun RotatePoint(mypoint: Pair<Double, Double>, angle: Double): Pair<Double, Double> {
     val x = mypoint.first * cos(angle) - mypoint.second * sin(angle)
