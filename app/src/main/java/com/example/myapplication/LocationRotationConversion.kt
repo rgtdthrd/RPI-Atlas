@@ -91,7 +91,21 @@ private fun RotatePoint(mypoint: Pair<Double, Double>, angle: Double): Pair<Doub
     return Pair(x, y)
 }
 
-fun ConvertLocation(latitude: Double, longitude: Double): Pair<Double, Double> {
+private fun FindError(): Double {
+    val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
+    val delta1 = DeltaDistance(LOCMAP_to_Double)
+    val delta2 = DeltaDistance(LOCPOS)
+    var total = 0.0
+    for (i in 0 until COMBOS) {
+        val x1 = scale_factor * delta2[i].first
+        val y1 = scale_factor * delta2[i].second
+        val (x2, y2) = RotatePoint(delta1[i], radian_displace)
+        total += Magnitude(Pair(x1 - x2, y1 - y2))
+    }
+    return total / COMBOS
+}
+
+fun ConvertLocation(latitude: Double, longitude: Double): Pair<Int, Int> {
     if (scale_factor == 0.0) {
         get_scale_factor()
     }
@@ -105,5 +119,6 @@ fun ConvertLocation(latitude: Double, longitude: Double): Pair<Double, Double> {
         total_point[i] = Pair(total_point[i].first * scale_factor, total_point[i].second * scale_factor)
         total_point[i] = Pair(total_point[i].first + LOCMAP[i].first, total_point[i].second + LOCMAP[i].second)
     }
-    return MeanPoint(total_point)
+    val mean = MeanPoint(total_point)
+    return Pair(mean.first.toInt(), mean.second.toInt())
 }
