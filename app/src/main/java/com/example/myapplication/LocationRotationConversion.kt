@@ -26,9 +26,32 @@ private val COMBOS: Int = TESTSIZE * (TESTSIZE - 1) / 2
 private var scale_factor = 0.0
 private var radian_displace = 0.0
 
-//private fun get_scale_factor(): Double
+private fun get_scale_factor() {
+    val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
+    val delta1 = DeltaDistance(LOCMAP_to_Double)
+    val delta2 = DeltaDistance(LOCPOS)
+    var total = 0.0
+    for (i in 0 until COMBOS) {
+        total += Magnitude(delta1[i]) / Magnitude(delta2[i])
+    }
+    scale_factor = total / COMBOS
+}
 
-//private fun get_radian_displace(): Double
+private fun get_radian_displace(){
+    val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
+    val delta1 = DeltaDistance(LOCMAP_to_Double)
+    val delta2 = DeltaDistance(LOCPOS)
+    var total = 0.0
+    for (i in 0 until COMBOS) {
+        val temp = acos(DotProduct(delta1[i], delta2[i]) / (Magnitude(delta1[i]) * Magnitude(delta2[i])))
+        if (temp < PI / 2) {
+            total += PI - temp
+        } else {
+            total += temp
+        }
+    }
+    radian_displace = total / COMBOS
+}
 
 private fun DotProduct(a: Pair<Double, Double>, b: Pair<Double, Double>): Double {
     return a.first * b.first + a.second * b.second
