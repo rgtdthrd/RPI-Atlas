@@ -30,16 +30,18 @@ private var radian_displace = 0.0
 
 //private fun get_radian_displace(): Double
 
-private fun dot_product(a: Pair<Double, Double>, b: Pair<Double, Double>): Double {
+private fun DotProduct(a: Pair<Double, Double>, b: Pair<Double, Double>): Double {
     return a.first * b.first + a.second * b.second
 }
 
-//private fun magnitute(mypoint: Pair<Double, Double>): Double
+private fun Magnitude(mypoint: Pair<Double, Double>): Double {
+    return sqrt(DotProduct(mypoint, mypoint))
+}
 
-//private fun distance_differences(mypoints: Pair<Double, Double>): Array<Pair<Double, Double>>
+//private fun DeltaDistance(mypoints: Pair<Double, Double>): Array<Pair<Double, Double>>
 
-//private fun mean_point(mypoints: Pair<Double, Double>): Pair<Double, Double>
+//private fun MeanPoint(mypoints: Pair<Double, Double>): Pair<Double, Double>
 
-//private fun rotate_point(mypoint: Pair<Double, Double>, angle: Double): Pair<Double, Double>
+//private fun RotatePoint(mypoint: Pair<Double, Double>, angle: Double): Pair<Double, Double>
 
 //fun ConvertLocation(latitude: Double, longitude: Double): Pair<Double, Double>
