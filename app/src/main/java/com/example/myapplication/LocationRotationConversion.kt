@@ -42,6 +42,10 @@ private fun Magnitude(mypoint: Pair<Double, Double>): Double {
 
 //private fun MeanPoint(mypoints: Pair<Double, Double>): Pair<Double, Double>
 
-//private fun RotatePoint(mypoint: Pair<Double, Double>, angle: Double): Pair<Double, Double>
+private fun RotatePoint(mypoint: Pair<Double, Double>, angle: Double): Pair<Double, Double> {
+    val x = mypoint.first * cos(angle) - mypoint.second * sin(angle)
+    val y = mypoint.first * sin(angle) + mypoint.second * cos(angle)
+    return Pair(x, y)
+}
 
 //fun ConvertLocation(latitude: Double, longitude: Double): Pair<Double, Double>
