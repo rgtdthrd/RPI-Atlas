@@ -30,7 +30,9 @@ private var radian_displace = 0.0
 
 //private fun get_radian_displace(): Double
 
-//private fun dot_product(a: Pair<Double, Double>, b: Pair<Double, Double>): Double
+private fun dot_product(a: Pair<Double, Double>, b: Pair<Double, Double>): Double {
+    return a.first * b.first + a.second * b.second
+}
 
 //private fun magnitute(mypoint: Pair<Double, Double>): Double
 
