@@ -91,4 +91,19 @@ private fun RotatePoint(mypoint: Pair<Double, Double>, angle: Double): Pair<Doub
     return Pair(x, y)
 }
 
-//fun ConvertLocation(latitude: Double, longitude: Double): Pair<Double, Double>
+fun ConvertLocation(latitude: Double, longitude: Double): Pair<Double, Double> {
+    if (scale_factor == 0.0) {
+        get_scale_factor()
+    }
+    if (radian_displace == 0.0) {
+        get_radian_displace()
+    }
+    var total_point = Array(TESTSIZE) { Pair(0.0, 0.0) }
+    for (i in 0 until TESTSIZE) {
+        total_point[i] = Pair(latitude - LOCPOS[i].first, longitude - LOCPOS[i].second)
+        total_point[i] = RotatePoint(total_point[i], -radian_displace)
+        total_point[i] = Pair(total_point[i].first * scale_factor, total_point[i].second * scale_factor)
+        total_point[i] = Pair(total_point[i].first + LOCMAP[i].first, total_point[i].second + LOCMAP[i].second)
+    }
+    return MeanPoint(total_point)
+}
