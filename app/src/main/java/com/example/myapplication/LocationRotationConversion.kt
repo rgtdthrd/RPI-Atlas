@@ -1,6 +1,8 @@
 package com.example.myapplication
 import kotlin.math.*
 
+private val MAP_ORIENTATION_OFFSET = 0.0
+
 private val LOCPOS = arrayOf(
     Pair(42.730495, -73.678432),
     Pair(42.73236423119569, -73.67009163262247),
@@ -121,4 +123,8 @@ fun ConvertLocation(latitude: Double, longitude: Double): Pair<Int, Int> {
     }
     val mean = MeanPoint(total_point)
     return Pair(mean.first.toInt(), mean.second.toInt())
+}
+
+fun ConvertRotation(cardinal_rotation: Double): Double {
+    return (cardinal_rotation - MAP_ORIENTATION_OFFSET) % 360
 }
