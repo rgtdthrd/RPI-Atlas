@@ -10,8 +10,12 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import com.example.myapplication.databinding.ActivityMainBinding
+import android.util.Log  // Add this import
+
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var userLocationAccessor: UserLocationAccessor
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -21,6 +25,9 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Initialize the UserLocationAccessor
+        userLocationAccessor = UserLocationAccessor(this, this)
 
     }
 
@@ -44,5 +51,17 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+    //testing getUserLocation
+    override fun onResume() {
+        super.onResume()
+        val location = userLocationAccessor.getUserLocation()
+        location?.let { (latitude, longitude) ->
+            // Log the latitude and longitude to the console (Logcat)
+            Log.d("Location", "Latitude: $latitude, Longitude: $longitude")
+        } ?: run {
+            // Log that the location is null (either permission not granted or no location available)
+            Log.d("Location", "Location is null, permission might not be granted.")
+        }
     }
 }
