@@ -55,13 +55,16 @@ class MainActivity : AppCompatActivity() {
     //testing getUserLocation
     override fun onResume() {
         super.onResume()
-        val location = userLocationAccessor.getUserLocation()
-        location?.let { (latitude, longitude) ->
-            // Log the latitude and longitude to the console (Logcat)
-            Log.d("Location", "Latitude: $latitude, Longitude: $longitude")
-        } ?: run {
-            // Log that the location is null (either permission not granted or no location available)
-            Log.d("Location", "Location is null, permission might not be granted.")
+
+        val userLocationAccessor = UserLocationAccessor(context = this, activity = this)
+
+        // Get a single location update and use it
+        userLocationAccessor.getUserLocation { coordinates ->
+            if (coordinates != null) {
+                Log.d("Location", "Latitude: ${coordinates.first}, Longitude: ${coordinates.second}")
+            } else {
+                Log.d("Location", "Location is null or permission not granted.")
+            }
         }
     }
 }
