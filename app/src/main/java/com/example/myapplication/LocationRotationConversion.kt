@@ -1,7 +1,5 @@
 package com.example.myapplication
 import android.widget.ImageView
-import android.graphics.*
-import android.media.Image
 import android.util.Log
 import kotlin.math.*
 
