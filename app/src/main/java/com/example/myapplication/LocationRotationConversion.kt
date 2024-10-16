@@ -149,6 +149,9 @@ fun DisplayLocation(map: ImageView, marker: ImageView, xPos: Int, yPos: Int) {
     }
 }
 
-fun DisplayRotation(degrees: Double) {
+fun DisplayRotation(map: ImageView, arrow: ImageView, degrees: Double) {
+    arrow.visibility = ImageView.VISIBLE
+    arrow.rotation = degrees.toFloat()
+    Log.d("DisplayRotation", "Arrow rotated to: $degrees degrees")
 
 }

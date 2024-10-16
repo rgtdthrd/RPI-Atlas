@@ -46,6 +46,15 @@
                 android:visibility="invisible"
                 app:srcCompat="@drawable/pngegg" />
 
+            <ImageView
+                android:id="@+id/arrowImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="600dp"
+                android:layout_marginTop="100dp"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/arrow" />
+
         </FrameLayout>
 
     </com.otaliastudios.zoom.ZoomLayout>

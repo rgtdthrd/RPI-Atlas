@@ -13,6 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import com.example.myapplication.databinding.ActivityMainBinding
+import java.lang.Math.random
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,17 +27,28 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //val testLoc = ConvertLocation(42.72845472653638, -73.68341858852392)
+        var testLoc = ConvertLocation(42.72845472653638 + (random() * 0.01),
+                                    -73.68341858852392 +(random() * 0.01))
+        var testRot = ConvertRotation(random() * 360)
+
         val campusMap: ImageView = findViewById(R.id.mapImage)
         val marker: ImageView = findViewById(R.id.markerImage)
+        val arrow: ImageView = findViewById(R.id.arrowImage)
 
         marker.bringToFront()
+        arrow.bringToFront()
         campusMap.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     isClick = true
                     Log.d("MainActivity", "Image touched")
-                    // DisplayLocation(campusMap, marker, testLoc.first, testLoc.second)
+
+                    DisplayLocation(campusMap, marker, testLoc.first, testLoc.second)
+                    DisplayRotation(campusMap, arrow, testRot)
+
+                    testLoc = ConvertLocation(42.72845472653638 + (random() * 0.01),
+                        -73.68341858852392 +(random() * 0.01))
+                    testRot = ConvertRotation(random() * 360)
                 }
                 MotionEvent.ACTION_MOVE -> {
                     isClick = false
