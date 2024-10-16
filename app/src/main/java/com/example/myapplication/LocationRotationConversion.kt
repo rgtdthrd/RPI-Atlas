@@ -1,4 +1,8 @@
 package com.example.myapplication
+import android.widget.ImageView
+import android.graphics.*
+import android.media.Image
+import android.util.Log
 import kotlin.math.*
 
 private val MAP_ORIENTATION_OFFSET = 0.0
@@ -23,10 +27,16 @@ private val LOCMAP = arrayOf(
     Pair(668, 724)
 )
 
+
 private val TESTSIZE = LOCPOS.size
 private val COMBOS: Int = TESTSIZE * (TESTSIZE - 1) / 2
 private var scale_factor = 0.0
 private var radian_displace = 0.0
+private val IMAGE_WIDTH = 1582
+private val IMAGE_HEIGHT = 1285
+private val X_OFFSET = 1280
+private val Y_OFFSET = 36
+
 
 private fun get_scale_factor() {
     val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
@@ -127,4 +137,20 @@ fun ConvertLocation(latitude: Double, longitude: Double): Pair<Int, Int> {
 
 fun ConvertRotation(cardinal_rotation: Double): Double {
     return (cardinal_rotation - MAP_ORIENTATION_OFFSET) % 360
+}
+
+fun DisplayLocation(map: ImageView, marker: ImageView, xPos: Int, yPos: Int) {
+    marker.visibility = ImageView.VISIBLE
+
+    if (xPos in 0..IMAGE_WIDTH && yPos in 0..IMAGE_HEIGHT) {
+        marker.x = (xPos.toFloat() - marker.width / 2) + X_OFFSET
+        marker.y = (yPos.toFloat() - marker.height / 2) + Y_OFFSET
+        Log.d("DisplayLocation", "Marker placed at: $xPos, $yPos")
+    } else {
+        Log.d("DisplayLocation", "Marker position out of bounds: $xPos, $yPos")
+    }
+}
+
+fun DisplayRotation(degrees: Double) {
+
 }

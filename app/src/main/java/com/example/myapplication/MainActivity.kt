@@ -1,15 +1,14 @@
 package com.example.myapplication
 
 import android.annotation.SuppressLint
+
 import android.view.MotionEvent
 import android.util.Log
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
@@ -17,9 +16,9 @@ import com.example.myapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-
     private var isClick = false
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,12 +26,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val imageView: ImageView = findViewById(R.id.imageView)
-        imageView.setOnTouchListener { v, event ->
+        //val testLoc = ConvertLocation(42.72845472653638, -73.68341858852392)
+        val campusMap: ImageView = findViewById(R.id.mapImage)
+        val marker: ImageView = findViewById(R.id.markerImage)
+
+        marker.bringToFront()
+        campusMap.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     isClick = true
                     Log.d("MainActivity", "Image touched")
+                    // DisplayLocation(campusMap, marker, testLoc.first, testLoc.second)
                 }
                 MotionEvent.ACTION_MOVE -> {
                     isClick = false
