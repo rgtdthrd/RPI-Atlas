@@ -1,15 +1,19 @@
 package com.example.myapplication
 
+import android.annotation.SuppressLint
+
+import android.view.MotionEvent
+import android.util.Log
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import com.example.myapplication.databinding.ActivityMainBinding
+import java.lang.Math.random
 import android.util.Log  // Add this import
 
 
@@ -17,17 +21,59 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var userLocationAccessor: UserLocationAccessor
 
+
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-
+    private var isClick = false
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         // Initialize the UserLocationAccessor
         userLocationAccessor = UserLocationAccessor(this, this)
+
+        var testLoc = ConvertLocation(42.72845472653638 + (random() * 0.01),
+                                    -73.68341858852392 +(random() * 0.01))
+        var testRot = ConvertRotation(random() * 360)
+
+        val campusMap: ImageView = findViewById(R.id.mapImage)
+        val marker: ImageView = findViewById(R.id.markerImage)
+        val arrow: ImageView = findViewById(R.id.arrowImage)
+
+        marker.bringToFront()
+        arrow.bringToFront()
+        campusMap.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    isClick = true
+                    Log.d("MainActivity", "Image touched")
+
+                    DisplayLocation(campusMap, marker, testLoc.first, testLoc.second)
+                    DisplayRotation(campusMap, arrow, testRot)
+
+                    testLoc = ConvertLocation(42.72845472653638 + (random() * 0.01),
+                        -73.68341858852392 +(random() * 0.01))
+                    testRot = ConvertRotation(random() * 360)
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    isClick = false
+                    Log.d("MainActivity", "Image moved")
+                }
+                MotionEvent.ACTION_UP -> {
+                    if (isClick) {
+                        v.performClick()
+                    }
+                    Log.d("MainActivity", "Touch released")
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    Log.d("MainActivity", "Touch canceled (gesture interrupted)")
+                }
+            }
+            true
+        }
 
     }
 
@@ -52,6 +98,7 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }
+
     //testing getUserLocation
     override fun onResume() {
         super.onResume()
@@ -68,3 +115,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+

@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="532dp"
     tools:context=".MainActivity">
 
     <com.otaliastudios.zoom.ZoomLayout
@@ -19,18 +19,43 @@
         app:minZoom="0.5"
         app:transformation="centerCrop">
 
-        <ImageView
-            android:id="@+id/imageView"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="532dp"
-            android:contentDescription="@string/app_name"
-            android:overScrollMode="always"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/campus_map"
-            tools:visibility="visible" />
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/mapImage"
+                android:layout_width="match_parent"
+                android:layout_height="532dp"
+                android:contentDescription="@string/app_name"
+                android:overScrollMode="always"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/campus_map"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/markerImage"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:contentDescription="@string/marker"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/pngegg" />
+
+            <ImageView
+                android:id="@+id/arrowImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="600dp"
+                android:layout_marginTop="100dp"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/arrow" />
+
+        </FrameLayout>
 
     </com.otaliastudios.zoom.ZoomLayout>
 
