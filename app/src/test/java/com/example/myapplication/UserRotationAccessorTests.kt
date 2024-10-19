@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class OrientationHelperTest {
-
     private lateinit var context: Context
     private lateinit var orientationHelper: OrientationHelper
     private lateinit var sensorManager: SensorManager

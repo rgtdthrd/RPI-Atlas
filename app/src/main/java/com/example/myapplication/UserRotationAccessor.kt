@@ -7,7 +7,6 @@ import android.hardware.SensorManager
 import android.util.Log
 
 class OrientationHelper(context: Context) {
-
     private var sensorManager: SensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private var accelerometerReading = FloatArray(3)
     private var magnetometerReading = FloatArray(3)
