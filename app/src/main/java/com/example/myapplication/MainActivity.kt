@@ -14,8 +14,12 @@ import android.view.MenuItem
 import android.widget.ImageView
 import com.example.myapplication.databinding.ActivityMainBinding
 import java.lang.Math.random
+import android.util.Log  // Add this import
+
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var userLocationAccessor: UserLocationAccessor
 
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -26,6 +30,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        // Initialize the UserLocationAccessor
+        userLocationAccessor = UserLocationAccessor(this, this)
 
         var testLoc = ConvertLocation(42.72845472653638 + (random() * 0.01),
                                     -73.68341858852392 +(random() * 0.01))
@@ -90,4 +98,21 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }
+
+    //testing getUserLocation
+    override fun onResume() {
+        super.onResume()
+
+        val userLocationAccessor = UserLocationAccessor(context = this, activity = this)
+
+        // Get a single location update and use it
+        userLocationAccessor.getUserLocation { coordinates ->
+            if (coordinates != null) {
+                Log.d("Location", "Latitude: ${coordinates.first}, Longitude: ${coordinates.second}")
+            } else {
+                Log.d("Location", "Location is null or permission not granted.")
+            }
+        }
+    }
 }
+
