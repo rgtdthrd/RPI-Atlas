@@ -3,7 +3,6 @@ package com.example.myapplication
 import android.annotation.SuppressLint
 
 import android.view.MotionEvent
-import android.util.Log
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -35,16 +34,22 @@ class MainActivity : AppCompatActivity() {
         // Initialize the UserLocationAccessor
         userLocationAccessor = UserLocationAccessor(this, this)
 
-        var testLoc = ConvertLocation(42.72845472653638 + (random() * 0.01),
-                                    -73.68341858852392 +(random() * 0.01))
+        var testLoc = ConvertLocation(42.73236423119569, -73.67009163262247)
+
+        /* Test getUserLocation with other functions = not working for some reason
+        userLocationAccessor.getUserLocation { coordinates ->
+            if (coordinates != null) {
+                testLoc = ConvertLocation(coordinates.first, coordinates.second)
+            }
+            Log.d("Location", "Latitude: ${testLoc.first}, Longitude: ${testLoc.second}")
+        }*/
+
         var testRot = ConvertRotation(random() * 360)
 
         val campusMap: ImageView = findViewById(R.id.mapImage)
         val marker: ImageView = findViewById(R.id.markerImage)
-        val arrow: ImageView = findViewById(R.id.arrowImage)
 
         marker.bringToFront()
-        arrow.bringToFront()
         campusMap.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -52,11 +57,11 @@ class MainActivity : AppCompatActivity() {
                     Log.d("MainActivity", "Image touched")
 
                     DisplayLocation(campusMap, marker, testLoc.first, testLoc.second)
-                    DisplayRotation(campusMap, arrow, testRot)
+                    DisplayRotation(campusMap, marker, testRot)
 
-                    testLoc = ConvertLocation(42.72845472653638 + (random() * 0.01),
-                        -73.68341858852392 +(random() * 0.01))
-                    testRot = ConvertRotation(random() * 360)
+                    //testLoc = ConvertLocation(42.72845472653638 + (random() * 0.01),
+                    //    -73.68341858852392 +(random() * 0.01))
+                    testRot = ConvertRotation(90.0)
                 }
                 MotionEvent.ACTION_MOVE -> {
                     isClick = false

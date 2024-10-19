@@ -32,8 +32,8 @@ private var scale_factor = 0.0
 private var radian_displace = 0.0
 private val IMAGE_WIDTH = 1582
 private val IMAGE_HEIGHT = 1285
-private val X_OFFSET = 1280
-private val Y_OFFSET = 36
+private val X_OFFSET = 1278
+private val Y_OFFSET = 55
 
 
 private fun get_scale_factor() {
@@ -150,8 +150,14 @@ fun DisplayLocation(map: ImageView, marker: ImageView, xPos: Int, yPos: Int) {
 }
 
 fun DisplayRotation(map: ImageView, arrow: ImageView, degrees: Double) {
+    /*
+    Needed Direction: right = 0.0, up = 90.0, left = 180.0, down = 270.0
+    Given Direction (degrees): 270 = right, 180 = up, 90 = left, 0.0 = down
+    Equation: ((direction) - 360) + 90 = correct direction
+     */
+
     arrow.visibility = ImageView.VISIBLE
-    arrow.rotation = degrees.toFloat()
+    arrow.rotation = abs((degrees.toFloat() - 360.0f) + 90.0f)
     Log.d("DisplayRotation", "Arrow rotated to: $degrees degrees")
 
 }

@@ -43,17 +43,10 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="0dp"
                 android:contentDescription="@string/marker"
+                android:transformPivotX="5dp"
+                android:transformPivotY="3dp"
                 android:visibility="invisible"
                 app:srcCompat="@drawable/pngegg" />
-
-            <ImageView
-                android:id="@+id/arrowImage"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginStart="600dp"
-                android:layout_marginTop="100dp"
-                android:visibility="invisible"
-                app:srcCompat="@drawable/arrow" />
 
         </FrameLayout>
 
