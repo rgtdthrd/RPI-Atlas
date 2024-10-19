@@ -47,11 +47,15 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.ui.graphics.android)
+    implementation(libs.junit.junit)
+    implementation(libs.junit.jupiter)
     testImplementation(libs.junit)
+    testImplementation ("io.mockk:mockk:1.13.3") // Use the latest version available
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.zoomlayout)
     implementation("com.google.android.gms:play-services-location:21.3.0")
+
 
 
 

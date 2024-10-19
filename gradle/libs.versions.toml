@@ -1,5 +1,5 @@
 [versions]
-agp = "8.6.0"
+agp = "8.7.0"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -12,6 +12,8 @@ navigationFragmentKtx = "2.6.0"
 navigationUiKtx = "2.6.0"
 zoomlayout = "1.9.0"
 uiGraphicsAndroid = "1.7.3"
+junitJunit = "4.12"
+junitJupiter = "5.8.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -26,6 +28,8 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 zoomlayout = { group = "com.otaliastudios", name = "zoomlayout", version.ref = "zoomlayout" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version = "21.3.0" }
 androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graphics-android", version.ref = "uiGraphicsAndroid" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
