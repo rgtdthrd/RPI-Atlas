@@ -1,3 +1,4 @@
+package com.example.myapplication
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -23,7 +24,7 @@ class OrientationHelper(context: Context) {
 
             // Update orientation if both accelerometer and magnetometer readings are available
             if (accelerometerReading.isNotEmpty() && magnetometerReading.isNotEmpty()) {
-                GetUserRotation()
+                getUserRotation()
             }
         }
 
@@ -42,7 +43,7 @@ class OrientationHelper(context: Context) {
     }
 
     // Function to get the user's facing direction in degrees from East
-    fun GetUserRotation(): Float {
+    fun getUserRotation(): Float {
         // Get the rotation matrix using accelerometer and magnetometer data
         SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerReading, magnetometerReading)
 
