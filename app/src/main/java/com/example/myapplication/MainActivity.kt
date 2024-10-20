@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     // Handler for scheduling tasks
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var updateTask: Runnable  // Declare the task
-
+    private var userLoc: Pair<Int, Int> = Pair(0, 0)
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +39,10 @@ class MainActivity : AppCompatActivity() {
 
         // Initialize the UserLocationAccessor
         userLocationAccessor = UserLocationAccessor(this, this)
-        var testLoc = ConvertLocation(42.73236423119569, -73.67009163262247)
+
         userLocationAccessor.getUserLocation { coordinates ->
             if (coordinates != null) {
-                testLoc = ConvertLocation(coordinates.first, coordinates.second)
+                userLoc = ConvertLocation(coordinates.first, coordinates.second)
             }
         }
         val testRot = ConvertRotation(random() * 360)
@@ -60,12 +60,11 @@ class MainActivity : AppCompatActivity() {
                 userLocationAccessor.getUserLocation { coordinates ->
                     if (coordinates != null) {
                         // Update test location and rotation
-                        testLoc = ConvertLocation(coordinates.first, coordinates.second)
-                        DisplayLocation(campusMap, marker, testLoc.first, testLoc.second)
+                        userLoc = ConvertLocation(coordinates.first, coordinates.second)
+                        DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)
                         DisplayRotation(campusMap, marker, testRot)
                     }
                 }
-                Log.d("MainActivity", "Time taken to get location: $elapsedTime ms")
                 // Schedule the next run in 3 seconds (5000 milliseconds)
                 handler.postDelayed(this, 1000)
             }
@@ -118,7 +117,9 @@ class MainActivity : AppCompatActivity() {
 
     //testing getUserLocation
     override fun onResume() {
+
         super.onResume()
+        userLocationAccessor.stopLocationUpdates()
         handler.post(updateTask)
     }
 }
