@@ -51,4 +51,14 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.zoomlayout)
     implementation("com.google.android.gms:play-services-location:21.3.0")
+
+    testImplementation("io.mockk:mockk:1.12.0")
+    testImplementation("org.robolectric:robolectric:4.7.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

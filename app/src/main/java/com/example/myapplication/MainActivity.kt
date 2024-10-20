@@ -14,7 +14,8 @@ import android.widget.ImageView
 import com.example.myapplication.databinding.ActivityMainBinding
 import java.lang.Math.random
 import android.util.Log  // Add this import
-
+import android.os.Handler
+import android.os.Looper
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,6 +25,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private var isClick = false
+
+    // Handler for scheduling tasks
+    private val handler = Handler(Looper.getMainLooper())
+    private lateinit var updateTask: Runnable  // Declare the task
+    private var userLoc: Pair<Int, Int> = Pair(0, 0)
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,36 +40,39 @@ class MainActivity : AppCompatActivity() {
         // Initialize the UserLocationAccessor
         userLocationAccessor = UserLocationAccessor(this, this)
 
-        var testLoc = ConvertLocation(42.73236423119569, -73.67009163262247)
-
-        // Test getUserLocation with other functions = not working for some reason
-
         userLocationAccessor.getUserLocation { coordinates ->
             if (coordinates != null) {
-                testLoc = ConvertLocation(coordinates.first, coordinates.second)
+                userLoc = ConvertLocation(coordinates.first, coordinates.second)
             }
-            Log.d("Location", "Latitude: ${testLoc.first}, Longitude: ${testLoc.second}")
         }
-
-
-        var testRot = ConvertRotation(random() * 360)
+        val testRot = ConvertRotation(random() * 360)
 
         val campusMap: ImageView = findViewById(R.id.mapImage)
         val marker: ImageView = findViewById(R.id.markerImage)
-
         marker.bringToFront()
+
+        // Define the task to run every 3 seconds
+        updateTask = object : Runnable {
+            override fun run() {
+                // Request user location and update display
+
+
+                userLocationAccessor.getUserLocation { coordinates ->
+                    if (coordinates != null) {
+                        // Update test location and rotation
+                        userLoc = ConvertLocation(coordinates.first, coordinates.second)
+                        DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)
+                        DisplayRotation(campusMap, marker, testRot)
+                    }
+                }
+                // Schedule the next run in 3 seconds (5000 milliseconds)
+                handler.postDelayed(this, 1000)
+            }
+        }
         campusMap.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     isClick = true
-                    Log.d("MainActivity", "Image touched")
-
-                    DisplayLocation(campusMap, marker, testLoc.first, testLoc.second)
-                    DisplayRotation(campusMap, marker, testRot)
-
-                    //testLoc = ConvertLocation(42.72845472653638 + (random() * 0.01),
-                    //    -73.68341858852392 +(random() * 0.01))
-                    testRot = ConvertRotation(90.0)
                 }
                 MotionEvent.ACTION_MOVE -> {
                     isClick = false
@@ -108,18 +117,10 @@ class MainActivity : AppCompatActivity() {
 
     //testing getUserLocation
     override fun onResume() {
+
         super.onResume()
-
-        val userLocationAccessor = UserLocationAccessor(context = this, activity = this)
-
-        // Get a single location update and use it
-        userLocationAccessor.getUserLocation { coordinates ->
-            if (coordinates != null) {
-                Log.d("Location", "Latitude: ${coordinates.first}, Longitude: ${coordinates.second}")
-            } else {
-                Log.d("Location", "Location is null or permission not granted.")
-            }
-        }
+        userLocationAccessor.stopLocationUpdates()
+        handler.post(updateTask)
     }
 }
 
