@@ -1,19 +1,24 @@
-
 import android.content.Context
 import android.hardware.SensorManager
 import com.example.myapplication.OrientationHelper
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Before
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import org.junit.runner.RunWith
 
-class OrientationHelperTest {
+@RunWith(RobolectricTestRunner::class)  // 使用 Robolectric 模拟 Android 环境
+@Config(sdk = [28])  // 配置 Android SDK 版本
+class UserRotationAccessorTests {
+
     private lateinit var context: Context
     private lateinit var orientationHelper: OrientationHelper
     private lateinit var sensorManager: SensorManager
 
-    @Before
+    @BeforeEach
     fun setup() {
         // Create a mock context
         context = mockk(relaxed = true)
@@ -51,8 +56,7 @@ class OrientationHelperTest {
         // Call the function to get the user's facing direction
         val direction = orientationHelper.getUserRotation()
 
-        // Assert that the returned direction from East is correct
+        // Assert that the returned direction from North is correct
         assertEquals(90f, direction)
     }
-
 }
