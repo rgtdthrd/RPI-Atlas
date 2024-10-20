@@ -54,13 +54,4 @@ dependencies {
     implementation(libs.zoomlayout)
     implementation("com.google.android.gms:play-services-location:21.3.0")
 
-    // Add mockk dependency for mocking in unit tests
-    testImplementation("io.mockk:mockk:1.13.3")  // Or the latest version
-
-    // JUnit 5 dependencies
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-
-
-
 }
