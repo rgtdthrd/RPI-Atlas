@@ -47,8 +47,12 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.ui.graphics.android)
+    implementation(libs.junit.junit)
+    implementation(libs.junit.jupiter)
     testImplementation(libs.junit)
+
     testImplementation(libs.junit.jupiter)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.zoomlayout)
@@ -60,6 +64,7 @@ dependencies {
     // JUnit 5 dependencies
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+
 
 
 
