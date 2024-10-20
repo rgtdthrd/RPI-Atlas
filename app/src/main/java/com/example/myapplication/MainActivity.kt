@@ -37,12 +37,14 @@ class MainActivity : AppCompatActivity() {
         var testLoc = ConvertLocation(42.73236423119569, -73.67009163262247)
 
         // Test getUserLocation with other functions = not working for some reason
+
         userLocationAccessor.getUserLocation { coordinates ->
             if (coordinates != null) {
                 testLoc = ConvertLocation(coordinates.first, coordinates.second)
             }
             Log.d("Location", "Latitude: ${testLoc.first}, Longitude: ${testLoc.second}")
         }
+
 
         var testRot = ConvertRotation(random() * 360)
 
