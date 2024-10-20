@@ -12,7 +12,6 @@ navigationFragmentKtx = "2.6.0"
 navigationUiKtx = "2.6.0"
 zoomlayout = "1.9.0"
 uiGraphicsAndroid = "1.7.3"
-junitJunit = "4.12"
 junitJupiter = "5.8.1"
 
 [libraries]
