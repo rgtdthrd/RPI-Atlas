@@ -2,6 +2,10 @@ package com.example.myapplication
 
 import android.annotation.SuppressLint
 
+import android.widget.SearchView
+import android.widget.Toast
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import android.view.MotionEvent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -20,11 +24,11 @@ import android.os.Looper
 class MainActivity : AppCompatActivity() {
 
     private lateinit var userLocationAccessor: UserLocationAccessor
-
-
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private var isClick = false
+    private var LandMarkGraph = Graph()
+    private var SearchResults = emptyArray<String>()
 
     // Handler for scheduling tasks
     private val handler = Handler(Looper.getMainLooper())
@@ -36,6 +40,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //initialize graph
+        val landmarkList = readCSVFromRaw()
+        for (landmark in landmarkList) {
+            LandMarkGraph.AddNode(landmark)
+        }
+        val all_terms = LandMarkGraph.GetAllSearchableNodeNames()
 
         // Initialize the UserLocationAccessor
         userLocationAccessor = UserLocationAccessor(this, this)
@@ -69,6 +79,28 @@ class MainActivity : AppCompatActivity() {
                 handler.postDelayed(this, 1000)
             }
         }
+
+        val searchView: SearchView = findViewById(R.id.searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // 当用户提交查询时，调用 FuzzySearch
+                if (query != null) {
+                    val results = FuzzySearch(query, all_terms)
+                    displayResults(results)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // 当搜索框内容发生变化时，调用 FuzzySearch
+                if (newText != null) {
+                    val results = FuzzySearch(newText, all_terms)
+                    displayResults(results)
+                }
+                return true
+            }
+        })
+
         campusMap.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -91,6 +123,42 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+
+    }
+    private fun displayResults(results: Array<String>) {
+        if (results.isNotEmpty()) {
+            Toast.makeText(this, "Results: ${results.joinToString(", ")}", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "No results found", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun readCSVFromRaw(): List<SearchableNode> {
+        val nodeList = mutableListOf<SearchableNode>()
+        val inputStream = resources.openRawResource(R.raw.landmarkdata)
+        val reader = BufferedReader(InputStreamReader(inputStream))
+
+        try {
+            var line: String?
+            reader.readLine()  // skip the title line
+            while (reader.readLine().also { line = it } != null) {
+                line?.let {
+                    val columns = it.split(",")
+                    assert(columns.size == 3)
+                    val name = columns[0]
+                    val lat = columns[1]
+                    val long = columns[2]
+                    val tmp = SearchableNode(position = Pair(lat.toDouble(), long.toDouble()), name = name)
+                    nodeList.add(tmp)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            reader.close()
+        }
+
+        return nodeList  // 返回不可变列表
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

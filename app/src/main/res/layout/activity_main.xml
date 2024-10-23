@@ -48,8 +48,25 @@
                 android:visibility="invisible"
                 app:srcCompat="@drawable/pngegg" />
 
+
         </FrameLayout>
 
+
     </com.otaliastudios.zoom.ZoomLayout>
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/searchbutton"
+        android:queryHint="search for location"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:iconifiedByDefault="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
