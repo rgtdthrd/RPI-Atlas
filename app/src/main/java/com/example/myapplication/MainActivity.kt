@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         for (landmark in landmarkList) {
             LandMarkGraph.AddNode(landmark)
         }
-        val all_terms = LandMarkGraph.GetAllSearchableNodeNames()
+        val allTerms = LandMarkGraph.GetAllSearchableNodeNames()
 
         // Initialize the UserLocationAccessor
         userLocationAccessor = UserLocationAccessor(this, this)
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // 当用户提交查询时，调用 FuzzySearch
                 if (query != null) {
-                    val results = FuzzySearch(query, all_terms)
+                    val results = FuzzySearch(query, allTerms)
                     displayResults(results)
                 }
                 return true
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 // FuzzySearch
                 if (newText != null) {
-                    val results = FuzzySearch(newText, all_terms)
+                    val results = FuzzySearch(newText, allTerms)
                     displayResults(results)
                 }
                 return true
@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
             reader.close()
         }
 
-        return nodeList  // 返回不可变列表
+        return nodeList  //
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
