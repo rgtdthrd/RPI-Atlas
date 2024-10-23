@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                // 当搜索框内容发生变化时，调用 FuzzySearch
+                // FuzzySearch
                 if (newText != null) {
                     val results = FuzzySearch(newText, all_terms)
                     displayResults(results)
