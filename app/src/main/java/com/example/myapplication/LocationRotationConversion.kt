@@ -28,39 +28,29 @@ private val LOCMAP = arrayOf(
 
 private val TESTSIZE = LOCPOS.size
 private val COMBOS: Int = TESTSIZE * (TESTSIZE - 1) / 2
-private var scale_factor = 0.0
-private var radian_displace = 0.0
+private var scale_factor = Pair(0.0, 0.0)
+private var reference_loc_map = Pair(0.0, 0.0)
+private var reference_loc_pos = Pair(0.0, 0.0)
 private val IMAGE_WIDTH = 1582
 private val IMAGE_HEIGHT = 1285
 private val X_OFFSET = 1278
 private val Y_OFFSET = 55
 
+private fun get_reference_points() {
+    val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
+    reference_loc_map = MeanPoint(LOCMAP_to_Double)
+    reference_loc_pos = MeanPoint(LOCPOS)
+}
 
 private fun get_scale_factor() {
     val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
     val delta1 = DeltaDistance(LOCMAP_to_Double)
     val delta2 = DeltaDistance(LOCPOS)
-    var total = 0.0
+    var total_point = emptyArray<Pair<Double, Double>>()
     for (i in 0 until COMBOS) {
-        total += Magnitude(delta1[i]) / Magnitude(delta2[i])
+        total_point += Pair(delta1[i].first / delta2[i].second, delta1[i].second / delta2[i].first)
     }
-    scale_factor = total / COMBOS
-}
-
-private fun get_radian_displace(){
-    val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
-    val delta1 = DeltaDistance(LOCMAP_to_Double)
-    val delta2 = DeltaDistance(LOCPOS)
-    var total = 0.0
-    for (i in 0 until COMBOS) {
-        val temp = acos(DotProduct(delta1[i], delta2[i]) / (Magnitude(delta1[i]) * Magnitude(delta2[i])))
-        if (temp < PI / 2) {
-            total += PI - temp
-        } else {
-            total += temp
-        }
-    }
-    radian_displace = total / COMBOS
+    scale_factor = MeanPoint(total_point)
 }
 
 private fun DotProduct(a: Pair<Double, Double>, b: Pair<Double, Double>): Double {
@@ -101,36 +91,16 @@ private fun RotatePoint(mypoint: Pair<Double, Double>, angle: Double): Pair<Doub
     return Pair(x, y)
 }
 
-private fun FindError(): Double {
-    val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
-    val delta1 = DeltaDistance(LOCMAP_to_Double)
-    val delta2 = DeltaDistance(LOCPOS)
-    var total = 0.0
-    for (i in 0 until COMBOS) {
-        val x1 = scale_factor * delta2[i].first
-        val y1 = scale_factor * delta2[i].second
-        val (x2, y2) = RotatePoint(delta1[i], radian_displace)
-        total += Magnitude(Pair(x1 - x2, y1 - y2))
-    }
-    return total / COMBOS
-}
-
 fun ConvertLocation(latitude: Double, longitude: Double): Pair<Int, Int> {
-    if (scale_factor == 0.0) {
+    if (scale_factor == Pair(0.0, 0.0)) {
         get_scale_factor()
     }
-    if (radian_displace == 0.0) {
-        get_radian_displace()
+    if (reference_loc_map == Pair(0.0, 0.0) || reference_loc_pos == Pair(0.0, 0.0)) {
+        get_reference_points()
     }
-    var total_point = Array(TESTSIZE) { Pair(0.0, 0.0) }
-    for (i in 0 until TESTSIZE) {
-        total_point[i] = Pair(latitude - LOCPOS[i].first, longitude - LOCPOS[i].second)
-        total_point[i] = RotatePoint(total_point[i], -radian_displace)
-        total_point[i] = Pair(total_point[i].first * scale_factor, total_point[i].second * scale_factor)
-        total_point[i] = Pair(total_point[i].first + LOCMAP[i].first, total_point[i].second + LOCMAP[i].second)
-    }
-    val mean = MeanPoint(total_point)
-    return Pair(mean.first.toInt(), mean.second.toInt())
+    val new_x = (longitude - reference_loc_pos.second) * scale_factor.first + reference_loc_map.first
+    val new_y = (latitude - reference_loc_pos.first) * scale_factor.second + reference_loc_map.second
+    return Pair(new_x.toInt(), new_y.toInt())
 }
 
 fun ConvertRotation(cardinal_rotation: Double): Double {
