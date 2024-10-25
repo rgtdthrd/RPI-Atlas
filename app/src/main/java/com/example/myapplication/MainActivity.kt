@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                 userLoc = ConvertLocation(coordinates.first, coordinates.second)
             }
         }
+
         val testRot = ConvertRotation(random() * 360)
 
         val campusMap: ImageView = findViewById(R.id.mapImage)
@@ -77,14 +78,14 @@ class MainActivity : AppCompatActivity() {
         updateTask = object : Runnable {
             override fun run() {
                 // Request user location and update display
-//                userLocationAccessor.getUserLocation { coordinates ->
-//                    if (coordinates != null) {
-//                        // Update test location and rotation
-//                        userLoc = ConvertLocation(coordinates.first, coordinates.second)
-//                        DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)
-//                        DisplayRotation(campusMap, marker, testRot)
-//                    }
-//                }
+                /*userLocationAccessor.getUserLocation { coordinates ->
+                    if (coordinates != null) {
+                        // Update test location and rotation
+                        userLoc = ConvertLocation(coordinates.first, coordinates.second)
+                        DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)
+                        DisplayRotation(campusMap, marker, testRot)
+                    }
+                }*/
                 // Schedule the next run in 3 seconds (5000 milliseconds)
                 handler.postDelayed(this, 1000)
             }
@@ -102,6 +103,11 @@ class MainActivity : AppCompatActivity() {
                 // 当用户提交查询时，调用 FuzzySearch
                 if (query != null) {
                     val results = FuzzySearch(query, allTerms)
+                    Log.d("MainActivity", "Query: $query")
+                    for (term in results)
+                    {
+                        Log.d("MainActivity", "Term: $term")
+                    }
                     displayResults(results)
                 }
                 return true
@@ -129,6 +135,10 @@ class MainActivity : AppCompatActivity() {
                 MotionEvent.ACTION_UP -> {
                     if (isClick) {
                         v.performClick()
+                        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.hideSoftInputFromWindow(searchView.windowToken, 0)
+                        recyclerViewResults.visibility = View.GONE
+                        cardView.visibility = View.GONE
                     }
                     Log.d("MainActivity", "Touch released")
                 }
@@ -166,7 +176,7 @@ class MainActivity : AppCompatActivity() {
             val location = ConvertLocation(selectedNode.position.first, selectedNode.position.second)
             DisplayLocation(findViewById(R.id.mapImage), findViewById(R.id.markerImage), location.first, location.second)
 
-            // Optionally, zoom into the location
+            // zoom into the location
             val zoomLayout = findViewById<ZoomLayout>(R.id.zoomLayout)
             zoomLayout.zoomTo(2f, true)
         } else {
