@@ -72,7 +72,7 @@
 
     </SearchView>
 
-    <!-- CardView with RecyclerView (Search Results Pop-up) -->
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="0dp"
@@ -85,7 +85,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- RecyclerView for Search Results -->
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -99,6 +99,6 @@
     </androidx.cardview.widget.CardView>
 
 
-    t
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
