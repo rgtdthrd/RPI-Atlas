@@ -16,6 +16,16 @@ class Graph() {
         }
         return out_array
     }
+    fun GetNodeByName(name: String): SearchableNode? {
+        for (node in nodes) {
+            if (node is SearchableNode && node.name.equals(name, ignoreCase = true)) {
+                return node
+            }
+        }
+        return null
+    }
+
+
 }
 
 open class Node(val position: Pair<Double, Double>) {

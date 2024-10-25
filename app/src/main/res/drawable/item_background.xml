@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <!-- Pressed state (dark background) -->
+    <item android:state_pressed="true">
+        <color android:color="#CCCCCC" /> <!-- Darker color when pressed -->
+    </item>
+    <!-- Default state -->
+    <item>
+        <color android:color="#FFFFFF" /> <!-- Default light background -->
+    </item>
+
+</selector>

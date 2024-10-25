@@ -54,6 +54,8 @@
 
     </com.otaliastudios.zoom.ZoomLayout>
 
+
+
     <SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
@@ -66,7 +68,37 @@
         android:iconifiedByDefault="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
 
+    </SearchView>
+
+    <!-- CardView with RecyclerView (Search Results Pop-up) -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:elevation="8dp"
+        android:visibility="gone"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintBottom_toTopOf="@id/searchView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- RecyclerView for Search Results -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:padding="8dp"
+            android:maxHeight="300dp"
+            android:background="@color/white"
+            android:clipToPadding="false" />
+
+    </androidx.cardview.widget.CardView>
+
+
+    t
 
 </androidx.constraintlayout.widget.ConstraintLayout>

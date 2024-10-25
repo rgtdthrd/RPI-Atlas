@@ -20,12 +20,23 @@ import java.lang.Math.random
 import android.util.Log  // Add this import
 import android.os.Handler
 import android.os.Looper
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.otaliastudios.zoom.ZoomLayout
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var userLocationAccessor: UserLocationAccessor
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var resultsAdapter: ResultsAdapter
+    private lateinit var recyclerViewResults: RecyclerView
+    private lateinit var cardView: CardView
+
     private var isClick = false
     private var LandMarkGraph = Graph()
     private var SearchResults = emptyArray<String>()
@@ -34,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var updateTask: Runnable  // Declare the task
     private var userLoc: Pair<Int, Int> = Pair(0, 0)
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,20 +77,24 @@ class MainActivity : AppCompatActivity() {
         updateTask = object : Runnable {
             override fun run() {
                 // Request user location and update display
-
-
-                userLocationAccessor.getUserLocation { coordinates ->
-                    if (coordinates != null) {
-                        // Update test location and rotation
-                        userLoc = ConvertLocation(coordinates.first, coordinates.second)
-                        DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)
-                        DisplayRotation(campusMap, marker, testRot)
-                    }
-                }
+//                userLocationAccessor.getUserLocation { coordinates ->
+//                    if (coordinates != null) {
+//                        // Update test location and rotation
+//                        userLoc = ConvertLocation(coordinates.first, coordinates.second)
+//                        DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)
+//                        DisplayRotation(campusMap, marker, testRot)
+//                    }
+//                }
                 // Schedule the next run in 3 seconds (5000 milliseconds)
                 handler.postDelayed(this, 1000)
             }
         }
+
+        cardView = findViewById(R.id.cardView)
+        recyclerViewResults = findViewById(R.id.recyclerView)
+        recyclerViewResults.layoutManager = LinearLayoutManager(this)
+        resultsAdapter = ResultsAdapter(emptyList())
+        recyclerViewResults.adapter = resultsAdapter
 
         val searchView: SearchView = findViewById(R.id.searchView)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -125,13 +141,48 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
     private fun displayResults(results: Array<String>) {
         if (results.isNotEmpty()) {
-            Toast.makeText(this, "Results: ${results.joinToString(", ")}", Toast.LENGTH_LONG).show()
+            // Update RecyclerView with new results
+            resultsAdapter.updateData(results.toList())
+            recyclerViewResults.visibility = View.VISIBLE
+            cardView.visibility = View.VISIBLE
         } else {
+            // Optionally, display a message in the UI rather than a Toast
             Toast.makeText(this, "No results found", Toast.LENGTH_SHORT).show()
+            recyclerViewResults.visibility = View.GONE
+            cardView.visibility = View.GONE
+            resultsAdapter.updateData(emptyList())
         }
     }
+
+
+    fun onSearchResultSelected(selectedName: String) {
+        // Find the SearchableNode corresponding to the selected name
+        val selectedNode = LandMarkGraph.GetNodeByName(selectedName)
+        if (selectedNode != null) {
+            // Update the marker position
+            val location = ConvertLocation(selectedNode.position.first, selectedNode.position.second)
+            DisplayLocation(findViewById(R.id.mapImage), findViewById(R.id.markerImage), location.first, location.second)
+
+            // Optionally, zoom into the location
+            val zoomLayout = findViewById<ZoomLayout>(R.id.zoomLayout)
+            zoomLayout.zoomTo(2f, true)
+        } else {
+            Toast.makeText(this, "Location not found", Toast.LENGTH_SHORT).show()
+        }
+
+        // Hide the RecyclerView
+        recyclerViewResults.visibility = View.GONE
+
+        // Hide the keyboard and clear focus
+        val searchView = findViewById<SearchView>(R.id.searchView)
+        searchView.clearFocus()
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(searchView.windowToken, 0)
+    }
+
 
     private fun readCSVFromRaw(): List<SearchableNode> {
         val nodeList = mutableListOf<SearchableNode>()
@@ -190,5 +241,8 @@ class MainActivity : AppCompatActivity() {
         userLocationAccessor.stopLocationUpdates()
         handler.post(updateTask)
     }
+
+
 }
+
 
