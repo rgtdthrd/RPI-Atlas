@@ -179,6 +179,9 @@ class MainActivity : AppCompatActivity() {
             // zoom into the location
             val zoomLayout = findViewById<ZoomLayout>(R.id.zoomLayout)
             zoomLayout.zoomTo(2f, true)
+
+            // take user to info & options page
+            DisplayLocationInfo(selectedNode)
         } else {
             Toast.makeText(this, "Location not found", Toast.LENGTH_SHORT).show()
         }
