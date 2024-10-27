@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.otaliastudios.zoom.ZoomLayout
 
+var user_curr_position = Pair(0.0, 0.0)
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity() {
 
         userLocationAccessor.getUserLocation { coordinates ->
             if (coordinates != null) {
+                user_curr_position = Pair(coordinates.first, coordinates.second)
                 userLoc = ConvertLocation(coordinates.first, coordinates.second)
             }
         }
