@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity() {
             zoomLayout.zoomTo(2f, true)
 
             // take user to info & options page
-            DisplayLocationInfo(selectedNode)
+            DisplayLocationInfo(this, selectedNode)
         } else {
             Toast.makeText(this, "Location not found", Toast.LENGTH_SHORT).show()
         }
