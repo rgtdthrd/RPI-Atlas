@@ -38,7 +38,7 @@ private fun matchVal(s: String, t: String): Int {
 fun FuzzySearch(searchword: String, all_terms: Array<String>): Array<String> {
     val scores = mutableMapOf<String, Int>()
     for (term in all_terms) {
-        scores[term] = matchVal(searchword, term)
+        scores[term] = matchVal(searchword, term.substring(0, minOf(searchword.length, term.length)))
     }
     val newmap = scores.toSortedMap(compareBy<String> {scores[it]}.thenBy{it})
     val results = Array<String>(NUMRESULTS) {" "}
