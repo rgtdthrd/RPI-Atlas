@@ -38,7 +38,7 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
 
 }
 
-private fun calculate_distance(p1: Pair<Double, Double>, p2: Pair<Double, Double>): Double {
+fun calculate_distance(p1: Pair<Double, Double>, p2: Pair<Double, Double>): Double {
     val lat1 = Math.toRadians(p1.first)
     val lon1 = Math.toRadians(p1.second)
     val lat2 = Math.toRadians(p2.first)
