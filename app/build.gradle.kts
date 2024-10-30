@@ -58,9 +58,12 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.7.3")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testImplementation("junit:junit:4.13.2")
+
 
 }
 
+//keep this to only use junit 5, comment out for junit 4.
 tasks.withType<Test> {
     useJUnitPlatform()
 }
