@@ -2,10 +2,17 @@ package com.example.myapplication
 
 class Graph() {
     var nodes = emptyArray<Node>()
+    // var edges = emptyArray<Edge>()
 
     fun AddNode(new_node: Node) {
         nodes += new_node
     }
+
+    /*
+    fun AddEdge(new_edge: Edge) {
+        // edges += new_edge
+    }
+    */
 
     fun GetAllSearchableNodeNames(): Array<String> {
         var out_array = emptyArray<String>()
