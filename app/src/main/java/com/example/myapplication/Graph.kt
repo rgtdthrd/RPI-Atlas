@@ -28,10 +28,10 @@ class Graph() {
 
 }
 
-open class Node(val position: Pair<Double, Double>) {
+open class Node(val position: Pair<Double, Double>, val name: String) {
 
 }
 
-open class SearchableNode(position: Pair<Double, Double>, val name: String) : Node(position) {
+open class SearchableNode(position: Pair<Double, Double>, name: String) : Node(position, name) {
 
 }
