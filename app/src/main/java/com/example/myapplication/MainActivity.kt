@@ -32,6 +32,7 @@ var user_curr_position = Pair(0.0, 0.0)
 class MainActivity : AppCompatActivity() {
 
     private lateinit var userLocationAccessor: UserLocationAccessor
+    private lateinit var userRotationAccessor: UserRotationAccessor
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var resultsAdapter: ResultsAdapter
@@ -70,7 +71,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val testRot = ConvertRotation(random() * 360)
+        userRotationAccessor = UserRotationAccessor(this)
+        var testRot = ConvertRotation(userRotationAccessor.getUserRotation() * 360)
 
         val campusMap: ImageView = findViewById(R.id.mapImage)
         val marker: ImageView = findViewById(R.id.markerImage)
@@ -80,14 +82,16 @@ class MainActivity : AppCompatActivity() {
         updateTask = object : Runnable {
             override fun run() {
                 // Request user location and update display
-                /*userLocationAccessor.getUserLocation { coordinates ->
+                userLocationAccessor.getUserLocation { coordinates ->
                     if (coordinates != null) {
                         // Update test location and rotation
                         userLoc = ConvertLocation(coordinates.first, coordinates.second)
                         DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)
+                        testRot = ConvertRotation(userRotationAccessor.getUserRotation() * 360)
+                        Log.d("UpdateTask", "User is facing $testRot degrees from East")
                         DisplayRotation(campusMap, marker, testRot)
                     }
-                }*/
+                }
                 // Schedule the next run in 3 seconds (5000 milliseconds)
                 handler.postDelayed(this, 1000)
             }
