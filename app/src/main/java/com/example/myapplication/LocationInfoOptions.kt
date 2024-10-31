@@ -31,14 +31,14 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
 
         userLocationAccessor.getUserLocation { coordinates ->
             if (coordinates != null) {
-                findViewById<TextView>(R.id.distance_text).text = "Distance: ${calculate_distance(seed_node.position, coordinates)} km"
+                findViewById<TextView>(R.id.distance_text).text = "Distance: ${CalculateDistance(seed_node.position, coordinates)} km"
             }
         }
     }
 
 }
 
-fun calculate_distance(p1: Pair<Double, Double>, p2: Pair<Double, Double>): Double {
+fun CalculateDistance(p1: Pair<Double, Double>, p2: Pair<Double, Double>): Double {
     val lat1 = Math.toRadians(p1.first)
     val lon1 = Math.toRadians(p1.second)
     val lat2 = Math.toRadians(p2.first)
