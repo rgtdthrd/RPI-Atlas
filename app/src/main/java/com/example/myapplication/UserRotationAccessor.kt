@@ -59,7 +59,11 @@ class UserRotationAccessor(private val context: Context) {
 
         val azimuthInRadians = orientationAngles[0].toDouble()
         val azimuthInDegrees = Math.toDegrees(azimuthInRadians)
-        val directionFromEast = (azimuthInDegrees - 90)
+        //Since we want the direction relative to East (0 degrees),
+        // we subtract 90 from azimuthInDegrees.
+        // Adding 360 ensures the result is non-negative,
+        // and using % 360 confines it to a 0-360 degree range.
+        val directionFromEast = (azimuthInDegrees - 90 + 360) % 360
 
         Log.d("UserRotation", "User is facing $directionFromEast degrees from East")
         return directionFromEast
