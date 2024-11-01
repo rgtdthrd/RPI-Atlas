@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                         // Update test location and rotation
                         userLoc = ConvertLocation(coordinates.first, coordinates.second)
                         DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)
-                        testRot = ConvertRotation(userRotationAccessor.getUserRotation() * 360)
+                        testRot = ConvertRotation(userRotationAccessor.getUserRotation())
                         Log.d("UpdateTask", "User is facing $testRot degrees from East")
                         DisplayRotation(campusMap, marker, testRot)
                     }
