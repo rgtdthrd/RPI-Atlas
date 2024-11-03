@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         //initialize graph
         val landmarkList = LandMarkGraph.ParseLandmarksFromCSV(this, R.raw.landmarkdata)
         LandMarkGraph.ParseNodesFromCSV(this, R.raw.nodedata)
+        // LandMarkGraph.ParseEdgesFromCSV(this, R.raw.edgedata)
         for (landmark in landmarkList) {
             LandMarkGraph.AddNode(landmark)
         }

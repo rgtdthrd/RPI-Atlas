@@ -90,11 +90,10 @@ class Graph() {
         }
     }
 
-/*
-    // Edge class is not implemented yet, but this should work when it is implemented.
-    fun ParseEdgesFromCSV(context: Context): List<Edge>{
-        val edgeList = mutableListOf<Edge>()
-        val inputStream = context.resources.openRawResource(R.raw.edgedata)
+
+    // Edge class is not implemented yet, but this should work when it is implemented and the two lines are uncommented.
+    fun ParseEdgesFromCSV(context: Context, resourceId: Int){
+        val inputStream = context.resources.openRawResource(resourceId)
         val reader = BufferedReader(InputStreamReader(inputStream))
         try {
             var line: String?
@@ -103,14 +102,25 @@ class Graph() {
                 line?.let {
                     val columns = it.split(",")
                     assert(columns.size == 2)
-                    val start = columns[0]
-                    val end = columns[1]
+                    val nodeName1 = columns[0]
+                    val nodeName2 = columns[1]
+                    val start = GetNodeByName(nodeName1)
+                    val end = GetNodeByName(nodeName2)
+                    assert(start != null)
+                    assert(end != null)
+                    // possibly add weight here too
+                    // val edge = Edge(start = start, end = end)
+                    // AddEdge(edge)
+                }
             }
-
+        } catch (e: Exception) {
+            e.printStackTrace()
+            } finally {
+            reader.close()
         }
 
     }
-    */
+
 
 
 }
