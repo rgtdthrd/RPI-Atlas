@@ -56,8 +56,12 @@ class MainActivity : AppCompatActivity() {
 
         //initialize graph
         val landmarkList = LandMarkGraph.ParseLandmarksFromCSV(this)
+        val nodeList = LandMarkGraph.ParseNodesFromCSV(this)
         for (landmark in landmarkList) {
             LandMarkGraph.AddNode(landmark)
+        }
+        for (node in nodeList) {
+            LandMarkGraph.AddNode(node)
         }
         val allTerms = LandMarkGraph.GetAllSearchableNodeNames()
 

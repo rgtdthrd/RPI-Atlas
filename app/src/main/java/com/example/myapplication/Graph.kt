@@ -64,6 +64,32 @@ class Graph() {
         return nodeList  //
     }
 
+    fun ParseNodesFromCSV(context: Context): List<Node>{
+            val nodeList = mutableListOf<Node>()
+            val inputStream = context.resources.openRawResource(R.raw.nodedata)
+            val reader = BufferedReader(InputStreamReader(inputStream))
+            try {
+                var line: String?
+                reader.readLine()
+                while (reader.readLine().also { line = it } != null) {
+                    line?.let {
+                        val columns = it.split(",")
+                        assert(columns.size == 3)
+                        val name = columns[0]
+                        val lat = columns[1]
+                        val long = columns[2]
+                        val tmp = Node(position = Pair(lat.toDouble(), long.toDouble()), name = name)
+                        nodeList.add(tmp)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                    reader.close()
+            }
+        return nodeList
+    }
+
 
 }
 
