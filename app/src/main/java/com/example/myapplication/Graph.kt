@@ -65,8 +65,7 @@ class Graph() {
     }
 
 
-    fun ParseNodesFromCSV(context: Context, resourceId: Int): List<Node> {
-        val nodeList = mutableListOf<Node>()
+    fun ParseNodesFromCSV(context: Context, resourceId: Int) {
         val inputStream = context.resources.openRawResource(resourceId)
         val reader = BufferedReader(InputStreamReader(inputStream))
 
@@ -80,8 +79,8 @@ class Graph() {
                     val name = columns[0]
                     val lat = columns[1]
                     val long = columns[2]
-                    val tmp = Node(position = Pair(lat.toDouble(), long.toDouble()), name = name)
-                    nodeList.add(tmp)
+                    val node = Node(position = Pair(lat.toDouble(), long.toDouble()), name = name)
+                    AddNode(node)
                 }
             }
         } catch (e: Exception) {
@@ -89,8 +88,6 @@ class Graph() {
         } finally {
             reader.close()
         }
-
-        return nodeList
     }
 
 /*
@@ -99,9 +96,22 @@ class Graph() {
         val edgeList = mutableListOf<Edge>()
         val inputStream = context.resources.openRawResource(R.raw.edgedata)
         val reader = BufferedReader(InputStreamReader(inputStream))
+        try {
+            var line: String?
+            reader.readLine()
+            while (reader.readLine().also { line = it } != null) {
+                line?.let {
+                    val columns = it.split(",")
+                    assert(columns.size == 2)
+                    val start = columns[0]
+                    val end = columns[1]
+            }
+
+        }
 
     }
-*/
+    */
+
 
 }
 
