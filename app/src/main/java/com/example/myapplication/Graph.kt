@@ -36,9 +36,9 @@ class Graph() {
         return null
     }
 
-    fun ParseLandmarksFromCSV(context: Context): List<SearchableNode> {
+    fun ParseLandmarksFromCSV(context: Context, resourceId: Int): List<SearchableNode> {
         val nodeList = mutableListOf<SearchableNode>()
-        val inputStream = context.resources.openRawResource(R.raw.landmarkdata)
+        val inputStream = context.resources.openRawResource(resourceId)
         val reader = BufferedReader(InputStreamReader(inputStream))
 
         try {
@@ -61,35 +61,47 @@ class Graph() {
             reader.close()
         }
 
-        return nodeList  //
-    }
-
-    fun ParseNodesFromCSV(context: Context): List<Node>{
-            val nodeList = mutableListOf<Node>()
-            val inputStream = context.resources.openRawResource(R.raw.nodedata)
-            val reader = BufferedReader(InputStreamReader(inputStream))
-            try {
-                var line: String?
-                reader.readLine()
-                while (reader.readLine().also { line = it } != null) {
-                    line?.let {
-                        val columns = it.split(",")
-                        assert(columns.size == 3)
-                        val name = columns[0]
-                        val lat = columns[1]
-                        val long = columns[2]
-                        val tmp = Node(position = Pair(lat.toDouble(), long.toDouble()), name = name)
-                        nodeList.add(tmp)
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                    reader.close()
-            }
         return nodeList
     }
 
+
+    fun ParseNodesFromCSV(context: Context, resourceId: Int): List<Node> {
+        val nodeList = mutableListOf<Node>()
+        val inputStream = context.resources.openRawResource(resourceId)
+        val reader = BufferedReader(InputStreamReader(inputStream))
+
+        try {
+            var line: String?
+            reader.readLine()
+            while (reader.readLine().also { line = it } != null) {
+                line?.let {
+                    val columns = it.split(",")
+                    assert(columns.size == 3)
+                    val name = columns[0]
+                    val lat = columns[1]
+                    val long = columns[2]
+                    val tmp = Node(position = Pair(lat.toDouble(), long.toDouble()), name = name)
+                    nodeList.add(tmp)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            reader.close()
+        }
+
+        return nodeList
+    }
+
+/*
+    // Edge class is not implemented yet, but this should work when it is implemented.
+    fun ParseEdgesFromCSV(context: Context): List<Edge>{
+        val edgeList = mutableListOf<Edge>()
+        val inputStream = context.resources.openRawResource(R.raw.edgedata)
+        val reader = BufferedReader(InputStreamReader(inputStream))
+
+    }
+*/
 
 }
 
