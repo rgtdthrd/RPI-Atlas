@@ -1,5 +1,9 @@
 package com.example.myapplication
 
+import android.content.Context
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
 class Graph() {
     var nodes = emptyArray<Node>()
     // var edges = emptyArray<Edge>()
@@ -30,6 +34,34 @@ class Graph() {
             }
         }
         return null
+    }
+
+    fun ParseLandmarksFromCSV(context: Context): List<SearchableNode> {
+        val nodeList = mutableListOf<SearchableNode>()
+        val inputStream = context.resources.openRawResource(R.raw.landmarkdata)
+        val reader = BufferedReader(InputStreamReader(inputStream))
+
+        try {
+            var line: String?
+            reader.readLine()  // skip the title line
+            while (reader.readLine().also { line = it } != null) {
+                line?.let {
+                    val columns = it.split(",")
+                    assert(columns.size == 3)
+                    val name = columns[0]
+                    val lat = columns[1]
+                    val long = columns[2]
+                    val tmp = SearchableNode(position = Pair(lat.toDouble(), long.toDouble()), name = name)
+                    nodeList.add(tmp)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            reader.close()
+        }
+
+        return nodeList  //
     }
 
 

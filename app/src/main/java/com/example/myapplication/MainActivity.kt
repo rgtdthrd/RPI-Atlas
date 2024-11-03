@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //initialize graph
-        val landmarkList = readCSVFromRaw()
+        val landmarkList = LandMarkGraph.ParseLandmarksFromCSV(this)
         for (landmark in landmarkList) {
             LandMarkGraph.AddNode(landmark)
         }
@@ -200,35 +200,6 @@ class MainActivity : AppCompatActivity() {
         searchView.clearFocus()
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(searchView.windowToken, 0)
-    }
-
-
-    private fun readCSVFromRaw(): List<SearchableNode> {
-        val nodeList = mutableListOf<SearchableNode>()
-        val inputStream = resources.openRawResource(R.raw.landmarkdata)
-        val reader = BufferedReader(InputStreamReader(inputStream))
-
-        try {
-            var line: String?
-            reader.readLine()  // skip the title line
-            while (reader.readLine().also { line = it } != null) {
-                line?.let {
-                    val columns = it.split(",")
-                    assert(columns.size == 3)
-                    val name = columns[0]
-                    val lat = columns[1]
-                    val long = columns[2]
-                    val tmp = SearchableNode(position = Pair(lat.toDouble(), long.toDouble()), name = name)
-                    nodeList.add(tmp)
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            reader.close()
-        }
-
-        return nodeList  //
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
