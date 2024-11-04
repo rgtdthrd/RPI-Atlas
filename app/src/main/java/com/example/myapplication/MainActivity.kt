@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         for (landmark in landmarkList) {
             LandMarkGraph.AddNode(landmark)
         }
-        val allTerms = LandMarkGraph.GetAllSearchableNodeNames()
+        val allTerms = LandMarkGraph.GetAllLandmarkNodeNames()
 
         // Initialize the UserLocationAccessor
         userLocationAccessor = UserLocationAccessor(this, this)
@@ -178,7 +178,7 @@ class MainActivity : AppCompatActivity() {
 
     fun onSearchResultSelected(selectedName: String) {
         // Find the SearchableNode corresponding to the selected name
-        val selectedNode = LandMarkGraph.GetNodeByName(selectedName)
+        val selectedNode = LandMarkGraph.GetLandmarkNodeByName(selectedName)
         if (selectedNode != null) {
             // Update the marker position
             val location = ConvertLocation(selectedNode.position.first, selectedNode.position.second)

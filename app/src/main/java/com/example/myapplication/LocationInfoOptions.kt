@@ -10,7 +10,7 @@ import android.widget.ImageButton
 import kotlin.math.*
 
 private val EARTHRADIUS = 6366707.0195
-private var seed_node = SearchableNode(Pair(0.0, 0.0), "N/A")
+private var seed_node = LandmarkNode(Pair(0.0, 0.0), "N/A")
 
 class LocationInfoAndOptionsActivity : AppCompatActivity() {
     private lateinit var userLocationAccessor: UserLocationAccessor
@@ -47,7 +47,7 @@ fun CalculateDistance(p1: Pair<Double, Double>, p2: Pair<Double, Double>): Doubl
     return exact_distance.roundToInt() / 1000.0
 }
 
-fun DisplayLocationInfo(context: Context, locationNode: SearchableNode) {
+fun DisplayLocationInfo(context: Context, locationNode: LandmarkNode) {
     seed_node = locationNode
     val intent = Intent(context, LocationInfoAndOptionsActivity::class.java)
     context.startActivity(intent)
