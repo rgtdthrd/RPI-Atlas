@@ -70,7 +70,11 @@ class GraphTest {
         val startNode = graph.GetNodeByName("Landmark A")!!
         val endNode = graph.GetNodeByName("Node A")!!
         val route = graph.ShortestPath(startNode, endNode)
-
+        for (edge in graph.edges) {
+            println("Edge from ${edge.start.name} at (${edge.start.position.first}, ${edge.start.position.second}) " +
+                    "to ${edge.end.name} at (${edge.end.position.first}, ${edge.end.position.second}), " +
+                    "Weight: ${edge.weight}")
+        }
         assertNotNull(route)
         assertEquals(1, route.getEdges().size) // Assuming 1 edge exists between these two nodes
         assertEquals("Landmark A", route.getEdges()[0].start.name)
