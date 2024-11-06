@@ -2,7 +2,6 @@ package com.example.myapplication
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
-import android.content.Context
 
 class GraphTest {
 
@@ -45,7 +44,7 @@ class GraphTest {
             println("Name: ${node.name}, Position: (${node.position.first}, ${node.position.second})")
         }
         assertEquals(5, graph.nodes.size)
-        assertEquals("Node A", graph.nodes[2].name)
+        assertEquals("Node C", graph.nodes[4].name)
     }
 
     @Test
