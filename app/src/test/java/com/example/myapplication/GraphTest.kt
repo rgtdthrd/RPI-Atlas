@@ -11,8 +11,6 @@ class GraphTest {
     fun setUp() {
         graph = Graph()
 
-        // Mock loading of CSV files for testing
-        // You would replace these with actual test data as necessary
         val landmarks = listOf(
             LandmarkNode(Pair(10.0, 20.0), "Landmark A"),
             LandmarkNode(Pair(15.0, 25.0), "Landmark B")
