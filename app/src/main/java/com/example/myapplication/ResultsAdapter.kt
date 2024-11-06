@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +38,7 @@ class ResultsAdapter(private var resultsList: List<String>) :
     override fun getItemCount(): Int = resultsList.size
 
     // Update the data in the adapter
+    @SuppressLint("NotifyDataSetChanged")
     fun updateData(newResults: List<String>) {
         resultsList = newResults
         notifyDataSetChanged()

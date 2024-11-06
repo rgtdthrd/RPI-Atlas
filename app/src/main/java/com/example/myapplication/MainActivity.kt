@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                         userLoc = ConvertLocation(coordinates.first, coordinates.second)
                         DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)
                         testRot = ConvertRotation(userRotationAccessor.getUserRotation())
-                        Log.d("UpdateTask", "User is facing $testRot degrees from East")
+                        //Log.d("UpdateTask", "User is facing $testRot degrees from East")
                         DisplayRotation(campusMap, marker, testRot)
                     }
                 }
@@ -111,11 +111,11 @@ class MainActivity : AppCompatActivity() {
                 // 当用户提交查询时，调用 FuzzySearch
                 if (query != null) {
                     val results = FuzzySearch(query, allTerms)
-                    Log.d("MainActivity", "Query: $query")
+                    /*Log.d("MainActivity", "Query: $query")
                     for (term in results)
                     {
                         Log.d("MainActivity", "Term: $term")
-                    }
+                    }*/
                     displayResults(results)
                 }
                 return true
@@ -185,8 +185,8 @@ class MainActivity : AppCompatActivity() {
             DisplayLocation(findViewById(R.id.mapImage), findViewById(R.id.markerImage), location.first, location.second)
 
             // zoom into the location
-            val zoomLayout = findViewById<ZoomLayout>(R.id.zoomLayout)
-            zoomLayout.zoomTo(2f, true)
+            //val zoomLayout = findViewById<ZoomLayout>(R.id.zoomLayout)
+            //zoomLayout.zoomTo(2f, true)
 
             // take user to info & options page
             DisplayLocationInfo(this, selectedNode)

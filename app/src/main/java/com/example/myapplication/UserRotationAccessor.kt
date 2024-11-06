@@ -20,11 +20,11 @@ class UserRotationAccessor(private val context: Context) {
             when (event.sensor.type) {
                 Sensor.TYPE_ACCELEROMETER -> {
                     accelerometerReading = event.values
-                    Log.d("UserRotation", "Accelerometer reading: ${accelerometerReading.joinToString()}")
+                    //Log.d("UserRotation", "Accelerometer reading: ${accelerometerReading.joinToString()}")
                 }
                 Sensor.TYPE_MAGNETIC_FIELD -> {
                     magnetometerReading = event.values
-                    Log.d("UserRotation", "Magnetometer reading: ${magnetometerReading.joinToString()}")
+                    //Log.d("UserRotation", "Magnetometer reading: ${magnetometerReading.joinToString()}")
                 }
             }
 
@@ -65,7 +65,7 @@ class UserRotationAccessor(private val context: Context) {
         // and using % 360 confines it to a 0-360 degree range.
         val directionFromEast = (azimuthInDegrees - 90 + 360) % 360
 
-        Log.d("UserRotation", "User is facing $directionFromEast degrees from East")
+        //Log.d("UserRotation", "User is facing $directionFromEast degrees from East")
         return directionFromEast
     }
 
