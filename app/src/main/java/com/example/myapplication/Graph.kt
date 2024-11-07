@@ -222,6 +222,13 @@ open class LandmarkNode(position: Pair<Double, Double>, name: String) : Node(pos
 
 open class Edge(val start: Node, val end: Node) {
     val weight: Double = CalculateDistance(start.position, end.position)
+    private var sudoNode: Node = start
+    fun updateSudoNode(newPosition: Pair<Double, Double>, newName: String = sudoNode.name) {
+        sudoNode = Node(newPosition, newName)
+    }
+    fun getSudoNode(): Node {
+        return sudoNode
+    }
     override fun toString(): String {
         return "${start.name} to ${end.name} (Weight: $weight)"
     }
