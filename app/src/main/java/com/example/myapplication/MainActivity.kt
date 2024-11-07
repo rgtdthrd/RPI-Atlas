@@ -40,8 +40,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cardView: CardView
 
     private var isClick = false
-    private var LandMarkGraph = Graph()
-    private var SearchResults = emptyArray<String>()
+    private var landMarkGraph = Graph()
+//    private var SearchResults = emptyArray<String>()
 
     // Handler for scheduling tasks
     private val handler = Handler(Looper.getMainLooper())
@@ -55,14 +55,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //initialize graph
-        val landmarkList = LandMarkGraph.ParseLandmarksFromCSV(this, R.raw.landmarkdata)
-        LandMarkGraph.ParseNodesFromCSV(this, R.raw.nodedata)
+        val edgeView: EdgeView = findViewById(R.id.edgeView)
+        val landmarkList = landMarkGraph.parseLandmarksFromCSV(this, R.raw.landmarkdata)
+        landMarkGraph.parseNodesFromCSV(this, R.raw.nodedata)
+        landMarkGraph.parseEdgesFromCSV(this, R.raw.edgedata)
+
+        landMarkGraph.parseNodesFromCSV(this, R.raw.nodedata)
         // LandMarkGraph.ParseEdgesFromCSV(this, R.raw.edgedata)
         for (landmark in landmarkList) {
-            LandMarkGraph.AddNode(landmark)
+            landMarkGraph.addNode(landmark)
         }
-        val allTerms = LandMarkGraph.GetAllLandmarkNodeNames()
-
+        val allEdges = landMarkGraph.getAllEdges()
+        val allTerms = landMarkGraph.getAllLandmarkNodeNames()
+        for (edge in allEdges) {
+            val firstNode = ConvertLocation(edge.start.position.first, edge.start.position.second)
+            val secondNode = ConvertLocation(edge.end.position.first, edge.end.position.second)
+            Log.d("EdgeTest", "Edge: ${firstNode.first}, ${firstNode.second} -> ${secondNode.first}, ${secondNode.second}")
+            edgeView.addEdge(edge)
+        }
         // Initialize the UserLocationAccessor
         userLocationAccessor = UserLocationAccessor(this, this)
 
@@ -74,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         userRotationAccessor = UserRotationAccessor(this)
-        var testRot = ConvertRotation(userRotationAccessor.getUserRotation() * 360)
+        var testRot = ConvertRotation(userRotationAccessor.getUserRotation())
 
         val campusMap: ImageView = findViewById(R.id.mapImage)
         val marker: ImageView = findViewById(R.id.markerImage)
@@ -88,6 +98,7 @@ class MainActivity : AppCompatActivity() {
                     if (coordinates != null) {
                         // Update test location and rotation
                         userLoc = ConvertLocation(coordinates.first, coordinates.second)
+                        Log.d("LocationTest", "User is at ${userLoc.first}, ${userLoc.second}")
                         DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)
                         testRot = ConvertRotation(userRotationAccessor.getUserRotation())
                         Log.d("UpdateTask", "User is facing $testRot degrees from East")
@@ -178,7 +189,7 @@ class MainActivity : AppCompatActivity() {
 
     fun onSearchResultSelected(selectedName: String) {
         // Find the SearchableNode corresponding to the selected name
-        val selectedNode = LandMarkGraph.GetLandmarkNodeByName(selectedName)
+        val selectedNode = landMarkGraph.getLandmarkNodeByName(selectedName)
         if (selectedNode != null) {
             // Update the marker position
             val location = ConvertLocation(selectedNode.position.first, selectedNode.position.second)

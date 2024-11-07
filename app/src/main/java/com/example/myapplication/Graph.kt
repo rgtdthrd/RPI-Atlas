@@ -8,25 +8,27 @@ class Graph() {
     var nodes = emptyArray<Node>()
     var edges = emptyArray<Edge>()
 
-    fun AddNode(new_node: Node) {
-        nodes += new_node
+    fun addNode(newNode: Node) {
+        nodes += newNode
     }
 
-    fun AddEdge(new_edge: Edge) {
-        edges += new_edge
+    fun addEdge(newEdge: Edge) {
+        edges += newEdge
     }
 
-
-    fun GetAllLandmarkNodeNames(): Array<String> {
-        var out_array = emptyArray<String>()
+    fun getAllEdges(): Array<Edge> {
+        return edges
+    }
+    fun getAllLandmarkNodeNames(): Array<String> {
+        var outArray = emptyArray<String>()
         for (node in nodes) {
             if (node is LandmarkNode) {
-                out_array += node.name
+                outArray += node.name
             }
         }
-        return out_array
+        return outArray
     }
-    fun GetNodeByName(name: String): Node? {
+    fun getNodeByName(name: String): Node? {
         for (node in nodes) {
             if (node.name.equals(name, ignoreCase = true)) {
                 return node
@@ -35,7 +37,7 @@ class Graph() {
         return null
     }
 
-    fun GetLandmarkNodeByName(name: String): LandmarkNode? {
+    fun getLandmarkNodeByName(name: String): LandmarkNode? {
         for (node in nodes) {
             if (node is LandmarkNode && node.name.equals(name, ignoreCase = true)) {
                 return node
@@ -44,7 +46,7 @@ class Graph() {
         return null
     }
 
-    fun ParseLandmarksFromCSV(context: Context, resourceId: Int): List<LandmarkNode> {
+    fun parseLandmarksFromCSV(context: Context, resourceId: Int): List<LandmarkNode> {
         val nodeList = mutableListOf<LandmarkNode>()
         val inputStream = context.resources.openRawResource(resourceId)
         val reader = BufferedReader(InputStreamReader(inputStream))
@@ -73,7 +75,7 @@ class Graph() {
     }
 
 
-    fun ParseNodesFromCSV(context: Context, resourceId: Int) {
+    fun parseNodesFromCSV(context: Context, resourceId: Int) {
         val inputStream = context.resources.openRawResource(resourceId)
         val reader = BufferedReader(InputStreamReader(inputStream))
 
@@ -88,7 +90,7 @@ class Graph() {
                     val lat = columns[1]
                     val long = columns[2]
                     val node = Node(position = Pair(lat.toDouble(), long.toDouble()), name = name)
-                    AddNode(node)
+                    addNode(node)
                 }
             }
         } catch (e: Exception) {
@@ -100,7 +102,7 @@ class Graph() {
 
 
     // Edge class is not implemented yet, but this should work when it is implemented and the two lines are uncommented.
-    fun ParseEdgesFromCSV(context: Context, resourceId: Int){
+    fun parseEdgesFromCSV(context: Context, resourceId: Int){
         val inputStream = context.resources.openRawResource(resourceId)
         val reader = BufferedReader(InputStreamReader(inputStream))
         try {
@@ -112,11 +114,11 @@ class Graph() {
                     assert(columns.size == 2)
                     val nodeName1 = columns[0]
                     val nodeName2 = columns[1]
-                    val start = GetNodeByName(nodeName1)
-                    val end = GetNodeByName(nodeName2)
+                    val start = getNodeByName(nodeName1)
+                    val end = getNodeByName(nodeName2)
                     if (start != null && end != null) {
                         val edge = Edge(start = start, end = end)
-                        AddEdge(edge)
+                        addEdge(edge)
                     } else {
                         // Handle the case where a node was not found
                         println("Error: One or both of the nodes were not found.")
@@ -131,7 +133,7 @@ class Graph() {
 
     }
 
-    fun GetClosestNode(position: Pair<Double, Double>): Node? {
+    fun getClosestNode(position: Pair<Double, Double>): Node? {
         if (nodes.isEmpty()) return null  // Return null if there are no nodes in the graph
         var closestNode: Node? = null
         var minDistance = Double.POSITIVE_INFINITY
@@ -147,15 +149,15 @@ class Graph() {
     }
 
     //Dijkstra's to find shortest path
-    fun ShortestPath(start_node: Node, end_node: Node): Route {
+    fun shortestPath(startNode: Node, endNode: Node): Route {
         val distances = mutableMapOf<Node, Double>().withDefault { Double.POSITIVE_INFINITY }
         val previousNodes = mutableMapOf<Node, Edge?>()
         val visited = mutableSetOf<Node>()
         val priorityQueue = java.util.PriorityQueue(compareBy<Pair<Node, Double>> { it.second })
 
         // Set the initial distance to the starting node as 0
-        distances[start_node] = 0.0
-        priorityQueue.add(Pair(start_node, 0.0))
+        distances[startNode] = 0.0
+        priorityQueue.add(Pair(startNode, 0.0))
 
         while (priorityQueue.isNotEmpty()) {
             // the !! asserts that its not null
@@ -166,7 +168,7 @@ class Graph() {
             visited.add(currentNode)
 
             // Stop if we've reached the end node
-            if (currentNode == end_node) break
+            if (currentNode == endNode) break
 
             // Relax edges from the current node
             for (edge in edges) {
@@ -186,7 +188,7 @@ class Graph() {
 
         // Reconstruct the path
         val route = Route()
-        var currentNode: Node? = end_node
+        var currentNode: Node? = endNode
         while (currentNode != null && previousNodes[currentNode] != null) {
             val edge = previousNodes[currentNode]
             if (edge != null) {
@@ -220,6 +222,9 @@ open class LandmarkNode(position: Pair<Double, Double>, name: String) : Node(pos
 
 open class Edge(val start: Node, val end: Node) {
     val weight: Double = CalculateDistance(start.position, end.position)
+    override fun toString(): String {
+        return "${start.name} to ${end.name} (Weight: $weight)"
+    }
 }
 
 open class Route {

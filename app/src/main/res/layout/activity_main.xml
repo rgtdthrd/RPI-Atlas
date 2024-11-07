@@ -48,7 +48,10 @@
                 android:visibility="invisible"
                 app:srcCompat="@drawable/pngegg" />
 
-
+            <com.example.myapplication.EdgeView
+                android:id="@+id/edgeView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </FrameLayout>
 
 
