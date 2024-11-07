@@ -37,7 +37,7 @@ class UserLocationAccessor(private val context: Context, private val activity: A
                 val location = locationResult.locations.firstOrNull()
                 if (location != null) {
                     val coordinates = Pair(location.latitude, location.longitude)
-                    Log.d("Location", "Latitude: ${coordinates.first}, Longitude: ${coordinates.second}")
+                    //Log.d("Location", "Latitude: ${coordinates.first}, Longitude: ${coordinates.second}")
                     callback(coordinates)
                 } else {
                     Log.d("Location", "Location is null or permission not granted.")

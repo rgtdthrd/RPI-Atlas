@@ -1,4 +1,5 @@
 package com.example.myapplication
+import android.media.Image
 import android.widget.ImageView
 import android.util.Log
 import kotlin.math.*
@@ -47,14 +48,16 @@ private fun get_reference_points() {
 }
 
 private fun get_scale_factor() {
-    val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
+    /*val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
     val delta1 = DeltaDistance(LOCMAP_to_Double)
     val delta2 = DeltaDistance(LOCPOS)
     var total_point = emptyArray<Pair<Double, Double>>()
     for (i in 0 until COMBOS) {
         total_point += Pair(delta1[i].first / delta2[i].second, delta1[i].second / delta2[i].first)
     }
-    scale_factor = MeanPoint(total_point)
+    scale_factor = MeanPoint(total_point)*/
+    scale_factor = Pair(62828.4066235, -86993.3520537)
+
 }
 
 private fun DotProduct(a: Pair<Double, Double>, b: Pair<Double, Double>): Double {
@@ -112,11 +115,17 @@ fun ConvertRotation(cardinal_rotation: Double): Double {
 }
 
 fun DisplayLocation(map: ImageView, marker: ImageView, xPos: Int, yPos: Int) {
+
     marker.visibility = ImageView.VISIBLE
 
-    if (xPos in 0..IMAGE_WIDTH && yPos in 0..IMAGE_HEIGHT) {
-        marker.x = (xPos.toFloat() - marker.width / 2) + X_OFFSET
-        marker.y = (yPos.toFloat() - marker.height / 2) + Y_OFFSET
+    val markerXScale = map.width.toFloat() / IMAGE_WIDTH.toFloat()
+    val markerYScale = map.height.toFloat() / IMAGE_HEIGHT.toFloat()
+    val mapScaleX = markerXScale.toInt() * IMAGE_WIDTH + 1
+    val mapScaleY = markerYScale.toInt() * IMAGE_HEIGHT + 1
+
+    if (markerXScale.toInt() in 0..mapScaleX && markerYScale.toInt() in 0..mapScaleY) {
+        marker.x = markerXScale * xPos.toFloat()// - marker.width / 2
+        marker.y = markerYScale * yPos.toFloat()// - marker.height / 2
         Log.d("DisplayLocation", "Marker placed at: $xPos, $yPos")
     } else {
         Log.d("DisplayLocation", "Marker position out of bounds: $xPos, $yPos")
@@ -131,7 +140,7 @@ fun DisplayRotation(map: ImageView, arrow: ImageView, degrees: Double) {
      */
 
     arrow.visibility = ImageView.VISIBLE
-    arrow.rotation = abs((degrees.toFloat() - 360.0f) + 90.0f)
-    Log.d("DisplayRotation", "Arrow rotated to: $degrees degrees")
+    arrow.rotation = degrees.toFloat() - 90.0f // abs((degrees.toFloat() - 360.0f) + 90.0f)
+    //Log.d("DisplayRotation", "Arrow rotated to: $degrees degrees")
 
 }
