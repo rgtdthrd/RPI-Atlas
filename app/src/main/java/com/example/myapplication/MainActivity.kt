@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
 
         //initialize graph
         val edgeView: EdgeView = findViewById(R.id.edgeView)
+        edgeView.setMap(findViewById(R.id.mapImage))
         val landmarkList = landMarkGraph.parseLandmarksFromCSV(this, R.raw.landmarkdata)
         landMarkGraph.parseNodesFromCSV(this, R.raw.nodedata)
         landMarkGraph.parseEdgesFromCSV(this, R.raw.edgedata)

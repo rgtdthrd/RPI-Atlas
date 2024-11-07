@@ -36,8 +36,8 @@ private val COMBOS: Int = TESTSIZE * (TESTSIZE - 1) / 2
 private var scale_factor = Pair(0.0, 0.0)
 private var reference_loc_map = Pair(0.0, 0.0)
 private var reference_loc_pos = Pair(0.0, 0.0)
-private val IMAGE_WIDTH = 1582
-private val IMAGE_HEIGHT = 1285
+val IMAGE_WIDTH = 1582
+val IMAGE_HEIGHT = 1285
 private val X_OFFSET = 1278
 private val Y_OFFSET = 55
 
