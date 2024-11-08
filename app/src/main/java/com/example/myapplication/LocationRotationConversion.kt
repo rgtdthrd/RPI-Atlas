@@ -38,8 +38,8 @@ private var reference_loc_map = Pair(0.0, 0.0)
 private var reference_loc_pos = Pair(0.0, 0.0)
 val IMAGE_WIDTH = 1582
 val IMAGE_HEIGHT = 1285
-private val X_OFFSET = 1278
-private val Y_OFFSET = 55
+private val X_OFFSET = -9.0f
+private val Y_OFFSET = -5.0f
 
 private fun get_reference_points() {
     val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
@@ -98,7 +98,7 @@ private fun RotatePoint(mypoint: Pair<Double, Double>, angle: Double): Pair<Doub
     return Pair(x, y)
 }
 
-fun ConvertLocation(latitude: Double, longitude: Double): Pair<Int, Int> {
+fun ConvertLocation(latitude: Double, longitude: Double): Pair<Float, Float> {
     if (scale_factor == Pair(0.0, 0.0)) {
         get_scale_factor()
     }
@@ -107,25 +107,25 @@ fun ConvertLocation(latitude: Double, longitude: Double): Pair<Int, Int> {
     }
     val new_x = (longitude - reference_loc_pos.second) * scale_factor.first + reference_loc_map.first
     val new_y = (latitude - reference_loc_pos.first) * scale_factor.second + reference_loc_map.second
-    return Pair(new_x.toInt(), new_y.toInt())
+    return Pair(new_x.toFloat(), new_y.toFloat())
 }
 
 fun ConvertRotation(cardinal_rotation: Double): Double {
     return (cardinal_rotation - MAP_ORIENTATION_OFFSET) % 360
 }
 
-fun DisplayLocation(map: ImageView, marker: ImageView, xPos: Int, yPos: Int) {
+fun DisplayLocation(map: ImageView, marker: ImageView, xPos: Float, yPos: Float) {
 
     marker.visibility = ImageView.VISIBLE
 
     val markerXScale = map.width.toFloat() / IMAGE_WIDTH.toFloat()
     val markerYScale = map.height.toFloat() / IMAGE_HEIGHT.toFloat()
-    val mapScaleX = markerXScale.toInt() * IMAGE_WIDTH + 1
-    val mapScaleY = markerYScale.toInt() * IMAGE_HEIGHT + 1
+    val mapScaleX = markerXScale * IMAGE_WIDTH.toFloat()
+    val mapScaleY = markerYScale * IMAGE_HEIGHT.toFloat()
 
-    if (markerXScale.toInt() in 0..mapScaleX && markerYScale.toInt() in 0..mapScaleY) {
-        marker.x = markerXScale * xPos.toFloat()// - marker.width / 2
-        marker.y = markerYScale * yPos.toFloat()// - marker.height / 2
+    if (markerXScale in 0.0f..mapScaleX && markerYScale in 0.0f..mapScaleY) {
+        marker.x = markerXScale * xPos + X_OFFSET
+        marker.y = markerYScale * yPos + Y_OFFSET
         Log.d("DisplayLocation", "Marker placed at: $xPos, $yPos")
     } else {
         Log.d("DisplayLocation", "Marker position out of bounds: $xPos, $yPos")

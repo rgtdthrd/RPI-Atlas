@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     // Handler for scheduling tasks
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var updateTask: Runnable  // Declare the task
-    private var userLoc: Pair<Int, Int> = Pair(0, 0)
+    private var userLoc: Pair<Float, Float> = Pair(0.0f, 0.0f)
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,6 +98,7 @@ class MainActivity : AppCompatActivity() {
                 userLocationAccessor.getUserLocation { coordinates ->
                     if (coordinates != null) {
                         // Update test location and rotation
+                        user_curr_position = Pair(coordinates.first, coordinates.second)
                         userLoc = ConvertLocation(coordinates.first, coordinates.second)
                         Log.d("LocationTest", "User is at ${userLoc.first}, ${userLoc.second}")
                         DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)

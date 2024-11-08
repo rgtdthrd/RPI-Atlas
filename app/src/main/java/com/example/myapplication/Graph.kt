@@ -1,6 +1,9 @@
 package com.example.myapplication
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -204,7 +207,39 @@ class Graph() {
         return route
     }
 
+    fun StartRoute(destination: Node) {
+        // Is this on map or using lat long irl?
+        val userLocNode = Node(Pair(user_curr_position.first, user_curr_position.second), "Current")
+        val startNode = getClosestNode(userLocNode.position)
+        val handler = Handler(Looper.getMainLooper())
+        val updateTask: Runnable  // Declare the task
+        if (startNode != null) {
+            val route = shortestPath(startNode, destination)
+            route.DisplayRoute()
+            // Should this be apart of this function? or should it be outside of it?
+            updateTask = object : Runnable {
+                override fun run() {
+                        if (!route.getEdges().isEmpty()) {
+                            route.HideTraversedEdges()
+                        }
+                        /*
 
+                        Current way of doing this: create a copied list of edges (copied route)
+                        that get deleted as user passes through each edge
+
+                        Another way of doing this: Move this function to main, as user's location nears an edge node,
+                        hide that node until destination is reached
+                         */
+
+                        // Schedule the next run in 3 seconds (3000 milliseconds)
+                        handler.postDelayed(this, 3000)
+                    }
+                }
+        }
+
+
+
+    }
 
 
 
@@ -253,7 +288,14 @@ open class Route {
         edges.clear()
         edges.addAll(newEdges)
     }
+    fun DisplayRoute() {
+        for (edge in edges) {
+            println("${edge.start.name} to ${edge.end.name} (Weight: ${edge.weight})")
+        }
+    }
+    fun HideTraversedEdges(){
 
+    }
     override fun toString(): String {
         return edges.joinToString(separator = " -> ") { "${it.start.name} to ${it.end.name} (Weight: ${it.weight})" }
     }

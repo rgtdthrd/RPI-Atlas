@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.ImageButton
@@ -11,10 +12,10 @@ import kotlin.math.*
 
 private val EARTHRADIUS = 6366707.0195
 private var seed_node = LandmarkNode(Pair(0.0, 0.0), "N/A")
-
+private var graph = Graph() // different instance of graph?
 class LocationInfoAndOptionsActivity : AppCompatActivity() {
     private lateinit var userLocationAccessor: UserLocationAccessor
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -22,6 +23,12 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.locationName).text = seed_node.name
         findViewById<TextView>(R.id.latitude_text).text = "Latitude: ${seed_node.position.first}"
         findViewById<TextView>(R.id.longitude_text).text = "Longitude: ${seed_node.position.second}"
+
+        val startRouteButton = findViewById<Button>(R.id.startRouteButton)
+        startRouteButton.setOnClickListener {
+            graph.StartRoute(seed_node)
+            finish()
+        }
 
         val backButton = findViewById<ImageButton>(R.id.backButton)
         backButton.setOnClickListener {
