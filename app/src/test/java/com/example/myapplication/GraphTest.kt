@@ -1,4 +1,5 @@
 package com.example.myapplication
+
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
@@ -22,22 +23,32 @@ class GraphTest {
         )
 
         for (landmark in landmarks) {
-            graph.AddNode(landmark)
+            graph.addNode(landmark)
         }
 
         for (node in nodes) {
-            graph.AddNode(node)
+            graph.addNode(node)
         }
 
         // Add edges (assuming these nodes exist)
-        graph.AddEdge(Edge(start = graph.GetNodeByName("Landmark A")!!, end = graph.GetNodeByName("Node A")!!))
-        graph.AddEdge(Edge(start = graph.GetNodeByName("Landmark B")!!, end = graph.GetNodeByName("Node B")!!))
+        graph.addEdge(
+            Edge(
+                start = graph.getNodeByName("Landmark A")!!,
+                end = graph.getNodeByName("Node A")!!
+            )
+        )
+        graph.addEdge(
+            Edge(
+                start = graph.getNodeByName("Landmark B")!!,
+                end = graph.getNodeByName("Node B")!!
+            )
+        )
     }
 
     @Test
     fun testAddNode() {
         val newNode = Node(Pair(5.0, 6.0), "Node C")
-        graph.AddNode(newNode)
+        graph.addNode(newNode)
         for (node in graph.nodes) {
             println("Name: ${node.name}, Position: (${node.position.first}, ${node.position.second})")
         }
@@ -47,33 +58,35 @@ class GraphTest {
 
     @Test
     fun testGetAllLandmarkNodeNames() {
-        val landmarkNames = graph.GetAllLandmarkNodeNames()
+        val landmarkNames = graph.getAllLandmarkNodeNames()
         assertArrayEquals(arrayOf("Landmark A", "Landmark B"), landmarkNames)
     }
 
     @Test
     fun testGetNodeByName() {
-        val node = graph.GetNodeByName("Node A")
+        val node = graph.getNodeByName("Node A")
         assertNotNull(node)
         assertEquals("Node A", node!!.name)
     }
 
     @Test
     fun testGetClosestNode() {
-        val closestNode = graph.GetClosestNode(Pair(10.5, 20.5))
+        val closestNode = graph.getClosestNode(Pair(10.5, 20.5))
         assertNotNull(closestNode)
         assertEquals("Landmark A", closestNode!!.name)
     }
 
     @Test
     fun testShortestPath() {
-        val startNode = graph.GetNodeByName("Landmark A")!!
-        val endNode = graph.GetNodeByName("Node A")!!
-        val route = graph.ShortestPath(startNode, endNode)
+        val startNode = graph.getNodeByName("Landmark A")!!
+        val endNode = graph.getNodeByName("Node A")!!
+        val route = graph.shortestPath(startNode, endNode)
         for (edge in graph.edges) {
-            println("Edge from ${edge.start.name} at (${edge.start.position.first}, ${edge.start.position.second}) " +
-                    "to ${edge.end.name} at (${edge.end.position.first}, ${edge.end.position.second}), " +
-                    "Weight: ${edge.weight}")
+            println(
+                "Edge from ${edge.start.name} at (${edge.start.position.first}, ${edge.start.position.second}) " +
+                        "to ${edge.end.name} at (${edge.end.position.first}, ${edge.end.position.second}), " +
+                        "Weight: ${edge.weight}"
+            )
         }
         assertNotNull(route)
         assertEquals(1, route.getEdges().size) // Assuming 1 edge exists between these two nodes
