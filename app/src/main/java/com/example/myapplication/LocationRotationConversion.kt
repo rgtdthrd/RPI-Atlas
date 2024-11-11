@@ -1,5 +1,3 @@
-@file:Suppress("ktlint:standard:no-wildcard-imports")
-
 package com.example.myapplication
 
 import android.util.Log
@@ -109,7 +107,7 @@ fun convertLocation(
     return Pair(newX.toFloat(), newY.toFloat())
 }
 
-fun convertRotation(cardinal_rotation: Double): Double = (cardinal_rotation - MAP_ORIENTATION_OFFSET) % 360
+fun convertRotation(cardinalRotation: Double): Double = (cardinalRotation - MAP_ORIENTATION_OFFSET) % 360
 
 fun displayLocation(
     map: ImageView,

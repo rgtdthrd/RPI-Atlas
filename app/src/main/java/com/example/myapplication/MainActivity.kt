@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.ActivityMainBinding
 
-var user_curr_position = Pair(0.0, 0.0)
+var userCurrPosition = Pair(0.0, 0.0)
 
 class MainActivity : AppCompatActivity() {
     private lateinit var userLocationAccessor: UserLocationAccessor
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
         userLocationAccessor.getUserLocation { coordinates ->
             if (coordinates != null) {
-                user_curr_position = Pair(coordinates.first, coordinates.second)
+                userCurrPosition = Pair(coordinates.first, coordinates.second)
                 userLoc = convertLocation(coordinates.first, coordinates.second)
             }
         }
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
                     userLocationAccessor.getUserLocation { coordinates ->
                         if (coordinates != null) {
                             // Update test location and rotation
-                            user_curr_position = Pair(coordinates.first, coordinates.second)
+                            userCurrPosition = Pair(coordinates.first, coordinates.second)
                             userLoc = convertLocation(coordinates.first, coordinates.second)
                             Log.d("LocationTest", "User is at ${userLoc.first}, ${userLoc.second}")
                             displayLocation(campusMap, marker, userLoc.first, userLoc.second)
@@ -208,7 +208,7 @@ class MainActivity : AppCompatActivity() {
             // zoomLayout.zoomTo(2f, true)
 
             // take user to info & options page
-            DisplayLocationInfo(this, selectedNode)
+            displayLocationInfo(this, selectedNode)
         } else {
             Toast.makeText(this, "Location not found", Toast.LENGTH_SHORT).show()
         }

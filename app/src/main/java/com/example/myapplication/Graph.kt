@@ -148,7 +148,7 @@ class Graph {
         var minDistance = Double.POSITIVE_INFINITY
         // check all nodes for distance, then return the closest one
         for (node in nodes) {
-            val distance = CalculateDistance(position, node.position)
+            val distance = calculateDistance(position, node.position)
             if (distance < minDistance) {
                 minDistance = distance
                 closestNode = node
@@ -218,7 +218,7 @@ class Graph {
 
     fun startRoute(destination: Node) {
         // Is this on map or using lat long irl?
-        val userLocNode = Node(Pair(user_curr_position.first, user_curr_position.second), "Current")
+        val userLocNode = Node(Pair(userCurrPosition.first, userCurrPosition.second), "Current")
         val startNode = getClosestNode(userLocNode.position)
         val handler = Handler(Looper.getMainLooper())
         val updateTask: Runnable // Declare the task
@@ -265,7 +265,7 @@ open class Edge(
     val start: Node,
     val end: Node,
 ) {
-    val weight: Double = CalculateDistance(start.position, end.position)
+    val weight: Double = calculateDistance(start.position, end.position)
     private var sudoNode: Node = start
 
     fun updateSudoNode(

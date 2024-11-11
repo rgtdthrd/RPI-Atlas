@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.math.*
 
-private val EARTHRADIUS = 6366707.0195
-private var seed_node = LandmarkNode(Pair(0.0, 0.0), "N/A")
+private const val EARTHRADIUS = 6366707.0195
+private var seedNode = LandmarkNode(Pair(0.0, 0.0), "N/A")
 private var graph = Graph() // different instance of graph?
 
 class LocationInfoAndOptionsActivity : AppCompatActivity() {
@@ -22,13 +22,13 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.location_info_and_options)
-        findViewById<TextView>(R.id.locationName).text = seed_node.name
-        findViewById<TextView>(R.id.latitude_text).text = "Latitude: ${seed_node.position.first}"
-        findViewById<TextView>(R.id.longitude_text).text = "Longitude: ${seed_node.position.second}"
+        findViewById<TextView>(R.id.locationName).text = seedNode.name
+        findViewById<TextView>(R.id.latitude_text).text = "Latitude: ${seedNode.position.first}"
+        findViewById<TextView>(R.id.longitude_text).text = "Longitude: ${seedNode.position.second}"
 
         val startRouteButton = findViewById<Button>(R.id.startRouteButton)
         startRouteButton.setOnClickListener {
-            graph.startRoute(seed_node)
+            graph.startRoute(seedNode)
             finish()
         }
 
@@ -41,13 +41,13 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
         userLocationAccessor.getUserLocation { coordinates ->
             if (coordinates != null) {
                 findViewById<TextView>(R.id.distance_text).text =
-                    "Distance: ${CalculateDistance(seed_node.position, coordinates)} km"
+                    "Distance: ${calculateDistance(seedNode.position, coordinates)} km"
             }
         }
     }
 }
 
-fun CalculateDistance(
+fun calculateDistance(
     p1: Pair<Double, Double>,
     p2: Pair<Double, Double>,
 ): Double {
@@ -55,16 +55,16 @@ fun CalculateDistance(
     val lon1 = Math.toRadians(p1.second)
     val lat2 = Math.toRadians(p2.first)
     val lon2 = Math.toRadians(p2.second)
-    val exact_distance =
+    val exactDistance =
         acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1)) * EARTHRADIUS
-    return exact_distance.roundToInt() / 1000.0
+    return exactDistance.roundToInt() / 1000.0
 }
 
-fun DisplayLocationInfo(
+fun displayLocationInfo(
     context: Context,
     locationNode: LandmarkNode,
 ) {
-    seed_node = locationNode
+    seedNode = locationNode
     val intent = Intent(context, LocationInfoAndOptionsActivity::class.java)
     context.startActivity(intent)
 }
