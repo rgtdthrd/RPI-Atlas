@@ -4,7 +4,6 @@ package com.example.myapplication
 
 import android.util.Log
 import android.widget.ImageView
-import kotlin.math.*
 
 private val MAP_ORIENTATION_OFFSET = 0.0
 
@@ -37,21 +36,21 @@ private val LOCMAP =
 private val TESTSIZE = LOCPOS.size
 private val COMBOS: Int = TESTSIZE * (TESTSIZE - 1) / 2
 private var scaleFactor = Pair(0.0, 0.0)
-private var reference_loc_map = Pair(0.0, 0.0)
-private var reference_loc_pos = Pair(0.0, 0.0)
-val IMAGE_WIDTH = 1582
-val IMAGE_HEIGHT = 1285
-private val X_OFFSET = -9.0f
-private val Y_OFFSET = -5.0f
+private var referenceLocMap = Pair(0.0, 0.0)
+private var referenceLocPos = Pair(0.0, 0.0)
+const val IMAGE_WIDTH = 1582
+const val IMAGE_HEIGHT = 1285
+private const val X_OFFSET = -9.0f
+private const val Y_OFFSET = -5.0f
 
-private fun get_reference_points() {
-    val LOCMAP_to_Double =
+private fun getReferencePoints() {
+    val locmapToDouble =
         Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
-    reference_loc_map = MeanPoint(LOCMAP_to_Double)
-    reference_loc_pos = MeanPoint(LOCPOS)
+    referenceLocMap = meanPoint(locmapToDouble)
+    referenceLocPos = meanPoint(LOCPOS)
 }
 
-private fun get_scale_factor() {
+private fun getScaleFactor() {
     /*val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
     val delta1 = DeltaDistance(LOCMAP_to_Double)
     val delta2 = DeltaDistance(LOCPOS)
@@ -63,14 +62,12 @@ private fun get_scale_factor() {
     scaleFactor = Pair(62828.4066235, -86993.3520537)
 }
 
-private fun DotProduct(
+private fun dotProduct(
     a: Pair<Double, Double>,
     b: Pair<Double, Double>,
 ): Double = a.first * b.first + a.second * b.second
 
-private fun Magnitude(mypoint: Pair<Double, Double>): Double = sqrt(DotProduct(mypoint, mypoint))
-
-private fun DeltaDistance(mypoints: Array<Pair<Double, Double>>): Array<Pair<Double, Double>> {
+private fun deltaDistance(mypoints: Array<Pair<Double, Double>>): Array<Pair<Double, Double>> {
     val delta = Array(COMBOS) { Pair(0.0, 0.0) }
     var index = 0
     for (i in 0 until TESTSIZE - 1) {
@@ -83,47 +80,38 @@ private fun DeltaDistance(mypoints: Array<Pair<Double, Double>>): Array<Pair<Dou
     return delta
 }
 
-private fun MeanPoint(mypoints: Array<Pair<Double, Double>>): Pair<Double, Double> {
-    var mean_x = 0.0
-    var mean_y = 0.0
+private fun meanPoint(mypoints: Array<Pair<Double, Double>>): Pair<Double, Double> {
+    var meanX = 0.0
+    var meanY = 0.0
     for (point in mypoints) {
-        mean_x += point.first
-        mean_y += point.second
+        meanX += point.first
+        meanY += point.second
     }
-    mean_x /= mypoints.size
-    mean_y /= mypoints.size
-    return Pair(mean_x, mean_y)
+    meanX /= mypoints.size
+    meanY /= mypoints.size
+    return Pair(meanX, meanY)
 }
 
-private fun RotatePoint(
-    mypoint: Pair<Double, Double>,
-    angle: Double,
-): Pair<Double, Double> {
-    val x = mypoint.first * cos(angle) - mypoint.second * sin(angle)
-    val y = mypoint.first * sin(angle) + mypoint.second * cos(angle)
-    return Pair(x, y)
-}
-
-fun ConvertLocation(
+fun convertLocation(
     latitude: Double,
     longitude: Double,
 ): Pair<Float, Float> {
     if (scaleFactor == Pair(0.0, 0.0)) {
-        get_scale_factor()
+        getScaleFactor()
     }
-    if (reference_loc_map == Pair(0.0, 0.0) || reference_loc_pos == Pair(0.0, 0.0)) {
-        get_reference_points()
+    if (referenceLocMap == Pair(0.0, 0.0) || referenceLocPos == Pair(0.0, 0.0)) {
+        getReferencePoints()
     }
-    val new_x =
-        (longitude - reference_loc_pos.second) * scaleFactor.first + reference_loc_map.first
-    val new_y =
-        (latitude - reference_loc_pos.first) * scaleFactor.second + reference_loc_map.second
-    return Pair(new_x.toFloat(), new_y.toFloat())
+    val newX =
+        (longitude - referenceLocPos.second) * scaleFactor.first + referenceLocMap.first
+    val newY =
+        (latitude - referenceLocPos.first) * scaleFactor.second + referenceLocMap.second
+    return Pair(newX.toFloat(), newY.toFloat())
 }
 
-fun ConvertRotation(cardinal_rotation: Double): Double = (cardinal_rotation - MAP_ORIENTATION_OFFSET) % 360
+fun convertRotation(cardinal_rotation: Double): Double = (cardinal_rotation - MAP_ORIENTATION_OFFSET) % 360
 
-fun DisplayLocation(
+fun displayLocation(
     map: ImageView,
     marker: ImageView,
     xPos: Float,

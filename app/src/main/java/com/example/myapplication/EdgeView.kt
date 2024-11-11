@@ -83,11 +83,11 @@ class EdgeView(
 
             for (edge in edges) {
                 val start =
-                    ConvertLocation(
+                    convertLocation(
                         edge.getSudoNode().position.first,
                         edge.getSudoNode().position.second,
                     )
-                val end = ConvertLocation(edge.end.position.first, edge.end.position.second)
+                val end = convertLocation(edge.end.position.first, edge.end.position.second)
 
                 val startX = start.first.toFloat() * mapWidth / IMAGE_WIDTH
                 val startY = start.second.toFloat() * mapHeight / IMAGE_HEIGHT

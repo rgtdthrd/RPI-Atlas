@@ -63,8 +63,8 @@ class MainActivity : AppCompatActivity() {
         val allEdges = landMarkGraph.getAllEdges()
         val allTerms = landMarkGraph.getAllLandmarkNodeNames()
         for (edge in allEdges) {
-            val firstNode = ConvertLocation(edge.start.position.first, edge.start.position.second)
-            val secondNode = ConvertLocation(edge.end.position.first, edge.end.position.second)
+            val firstNode = convertLocation(edge.start.position.first, edge.start.position.second)
+            val secondNode = convertLocation(edge.end.position.first, edge.end.position.second)
             Log.d(
                 "EdgeTest",
                 "Edge: ${firstNode.first}, ${firstNode.second} -> ${secondNode.first}, ${secondNode.second}",
@@ -77,12 +77,12 @@ class MainActivity : AppCompatActivity() {
         userLocationAccessor.getUserLocation { coordinates ->
             if (coordinates != null) {
                 user_curr_position = Pair(coordinates.first, coordinates.second)
-                userLoc = ConvertLocation(coordinates.first, coordinates.second)
+                userLoc = convertLocation(coordinates.first, coordinates.second)
             }
         }
 
         userRotationAccessor = UserRotationAccessor(this)
-        var testRot = ConvertRotation(userRotationAccessor.getUserRotation())
+        var testRot = convertRotation(userRotationAccessor.getUserRotation())
 
         val campusMap: ImageView = findViewById(R.id.mapImage)
         val marker: ImageView = findViewById(R.id.markerImage)
@@ -97,10 +97,10 @@ class MainActivity : AppCompatActivity() {
                         if (coordinates != null) {
                             // Update test location and rotation
                             user_curr_position = Pair(coordinates.first, coordinates.second)
-                            userLoc = ConvertLocation(coordinates.first, coordinates.second)
+                            userLoc = convertLocation(coordinates.first, coordinates.second)
                             Log.d("LocationTest", "User is at ${userLoc.first}, ${userLoc.second}")
-                            DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)
-                            testRot = ConvertRotation(userRotationAccessor.getUserRotation())
+                            displayLocation(campusMap, marker, userLoc.first, userLoc.second)
+                            testRot = convertRotation(userRotationAccessor.getUserRotation())
                             // Log.d("UpdateTask", "User is facing $testRot degrees from East")
                             displayRotation(campusMap, marker, testRot)
                         }
@@ -195,8 +195,8 @@ class MainActivity : AppCompatActivity() {
         if (selectedNode != null) {
             // Update the marker position
             val location =
-                ConvertLocation(selectedNode.position.first, selectedNode.position.second)
-            DisplayLocation(
+                convertLocation(selectedNode.position.first, selectedNode.position.second)
+            displayLocation(
                 findViewById(R.id.mapImage),
                 findViewById(R.id.markerImage),
                 location.first,
