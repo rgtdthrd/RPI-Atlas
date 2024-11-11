@@ -1,39 +1,42 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.example.myapplication
-import android.media.Image
-import android.widget.ImageView
+
 import android.util.Log
+import android.widget.ImageView
 import kotlin.math.*
 
 private val MAP_ORIENTATION_OFFSET = 0.0
 
-private val LOCPOS = arrayOf(
-    Pair(42.730495,-73.678432),
-    Pair(42.73236423119569,-73.67009163262247),
-    Pair(42.72706080812248,-73.67660537697532),
-    Pair(42.730149231745465,-73.6814722452884),
-    Pair(42.72908213598602,-73.67265224109543),
-    Pair(42.72845472653638,-73.68341858852392),
-    Pair(42.73078307416792,-73.67722000350271),
-    Pair(42.72884496556526,-73.68302650605078),
-    Pair(42.72688623007297,-73.6736111308174)
-)
+private val LOCPOS =
+    arrayOf(
+        Pair(42.730495, -73.678432),
+        Pair(42.73236423119569, -73.67009163262247),
+        Pair(42.72706080812248, -73.67660537697532),
+        Pair(42.730149231745465, -73.6814722452884),
+        Pair(42.72908213598602, -73.67265224109543),
+        Pair(42.72845472653638, -73.68341858852392),
+        Pair(42.73078307416792, -73.67722000350271),
+        Pair(42.72884496556526, -73.68302650605078),
+        Pair(42.72688623007297, -73.6736111308174),
+    )
 
-private val LOCMAP = arrayOf(
-    Pair(587,749),
-    Pair(1121,584),
-    Pair(707,1047),
-    Pair(395,780),
-    Pair(961,868),
-    Pair(274,925),
-    Pair(668,724),
-    Pair(296,893),
-    Pair(899,1061)
-)
-
+private val LOCMAP =
+    arrayOf(
+        Pair(587, 749),
+        Pair(1121, 584),
+        Pair(707, 1047),
+        Pair(395, 780),
+        Pair(961, 868),
+        Pair(274, 925),
+        Pair(668, 724),
+        Pair(296, 893),
+        Pair(899, 1061),
+    )
 
 private val TESTSIZE = LOCPOS.size
 private val COMBOS: Int = TESTSIZE * (TESTSIZE - 1) / 2
-private var scale_factor = Pair(0.0, 0.0)
+private var scaleFactor = Pair(0.0, 0.0)
 private var reference_loc_map = Pair(0.0, 0.0)
 private var reference_loc_pos = Pair(0.0, 0.0)
 val IMAGE_WIDTH = 1582
@@ -42,7 +45,8 @@ private val X_OFFSET = -9.0f
 private val Y_OFFSET = -5.0f
 
 private fun get_reference_points() {
-    val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
+    val LOCMAP_to_Double =
+        Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
     reference_loc_map = MeanPoint(LOCMAP_to_Double)
     reference_loc_pos = MeanPoint(LOCPOS)
 }
@@ -56,24 +60,23 @@ private fun get_scale_factor() {
         total_point += Pair(delta1[i].first / delta2[i].second, delta1[i].second / delta2[i].first)
     }
     scale_factor = MeanPoint(total_point)*/
-    scale_factor = Pair(62828.4066235, -86993.3520537)
-
+    scaleFactor = Pair(62828.4066235, -86993.3520537)
 }
 
-private fun DotProduct(a: Pair<Double, Double>, b: Pair<Double, Double>): Double {
-    return a.first * b.first + a.second * b.second
-}
+private fun DotProduct(
+    a: Pair<Double, Double>,
+    b: Pair<Double, Double>,
+): Double = a.first * b.first + a.second * b.second
 
-private fun Magnitude(mypoint: Pair<Double, Double>): Double {
-    return sqrt(DotProduct(mypoint, mypoint))
-}
+private fun Magnitude(mypoint: Pair<Double, Double>): Double = sqrt(DotProduct(mypoint, mypoint))
 
 private fun DeltaDistance(mypoints: Array<Pair<Double, Double>>): Array<Pair<Double, Double>> {
     val delta = Array(COMBOS) { Pair(0.0, 0.0) }
     var index = 0
     for (i in 0 until TESTSIZE - 1) {
         for (j in i + 1 until TESTSIZE) {
-            delta[index] = Pair(mypoints[i].first - mypoints[j].first, mypoints[i].second - mypoints[j].second)
+            delta[index] =
+                Pair(mypoints[i].first - mypoints[j].first, mypoints[i].second - mypoints[j].second)
             index++
         }
     }
@@ -92,30 +95,40 @@ private fun MeanPoint(mypoints: Array<Pair<Double, Double>>): Pair<Double, Doubl
     return Pair(mean_x, mean_y)
 }
 
-private fun RotatePoint(mypoint: Pair<Double, Double>, angle: Double): Pair<Double, Double> {
+private fun RotatePoint(
+    mypoint: Pair<Double, Double>,
+    angle: Double,
+): Pair<Double, Double> {
     val x = mypoint.first * cos(angle) - mypoint.second * sin(angle)
     val y = mypoint.first * sin(angle) + mypoint.second * cos(angle)
     return Pair(x, y)
 }
 
-fun ConvertLocation(latitude: Double, longitude: Double): Pair<Float, Float> {
-    if (scale_factor == Pair(0.0, 0.0)) {
+fun ConvertLocation(
+    latitude: Double,
+    longitude: Double,
+): Pair<Float, Float> {
+    if (scaleFactor == Pair(0.0, 0.0)) {
         get_scale_factor()
     }
     if (reference_loc_map == Pair(0.0, 0.0) || reference_loc_pos == Pair(0.0, 0.0)) {
         get_reference_points()
     }
-    val new_x = (longitude - reference_loc_pos.second) * scale_factor.first + reference_loc_map.first
-    val new_y = (latitude - reference_loc_pos.first) * scale_factor.second + reference_loc_map.second
+    val new_x =
+        (longitude - reference_loc_pos.second) * scaleFactor.first + reference_loc_map.first
+    val new_y =
+        (latitude - reference_loc_pos.first) * scaleFactor.second + reference_loc_map.second
     return Pair(new_x.toFloat(), new_y.toFloat())
 }
 
-fun ConvertRotation(cardinal_rotation: Double): Double {
-    return (cardinal_rotation - MAP_ORIENTATION_OFFSET) % 360
-}
+fun ConvertRotation(cardinal_rotation: Double): Double = (cardinal_rotation - MAP_ORIENTATION_OFFSET) % 360
 
-fun DisplayLocation(map: ImageView, marker: ImageView, xPos: Float, yPos: Float) {
-
+fun DisplayLocation(
+    map: ImageView,
+    marker: ImageView,
+    xPos: Float,
+    yPos: Float,
+) {
     marker.visibility = ImageView.VISIBLE
 
     val markerXScale = map.width.toFloat() / IMAGE_WIDTH.toFloat()
@@ -132,7 +145,11 @@ fun DisplayLocation(map: ImageView, marker: ImageView, xPos: Float, yPos: Float)
     }
 }
 
-fun DisplayRotation(map: ImageView, arrow: ImageView, degrees: Double) {
+fun displayRotation(
+    map: ImageView,
+    arrow: ImageView,
+    degrees: Double,
+) {
     /*
     Needed Direction: right = 0.0, up = 90.0, left = 180.0, down = 270.0
     Given Direction (degrees): 270 = right, 180 = up, 90 = left, 0.0 = down
@@ -141,6 +158,5 @@ fun DisplayRotation(map: ImageView, arrow: ImageView, degrees: Double) {
 
     arrow.visibility = ImageView.VISIBLE
     arrow.rotation = degrees.toFloat() - 90.0f // abs((degrees.toFloat() - 360.0f) + 90.0f)
-    //Log.d("DisplayRotation", "Arrow rotated to: $degrees degrees")
-
+    // Log.d("DisplayRotation", "Arrow rotated to: $degrees degrees")
 }

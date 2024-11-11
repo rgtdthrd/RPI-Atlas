@@ -1,26 +1,29 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package com.example.myapplication
 
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.*
 
 class GraphTest {
-
     private lateinit var graph: Graph
 
     @BeforeEach
     fun setUp() {
         graph = Graph()
 
-        val landmarks = listOf(
-            LandmarkNode(Pair(10.0, 20.0), "Landmark A"),
-            LandmarkNode(Pair(15.0, 25.0), "Landmark B")
-        )
+        val landmarks =
+            listOf(
+                LandmarkNode(Pair(10.0, 20.0), "Landmark A"),
+                LandmarkNode(Pair(15.0, 25.0), "Landmark B"),
+            )
 
-        val nodes = listOf(
-            Node(Pair(1.0, 2.0), "Node A"),
-            Node(Pair(3.0, 4.0), "Node B")
-        )
+        val nodes =
+            listOf(
+                Node(Pair(1.0, 2.0), "Node A"),
+                Node(Pair(3.0, 4.0), "Node B"),
+            )
 
         for (landmark in landmarks) {
             graph.addNode(landmark)
@@ -34,14 +37,14 @@ class GraphTest {
         graph.addEdge(
             Edge(
                 start = graph.getNodeByName("Landmark A")!!,
-                end = graph.getNodeByName("Node A")!!
-            )
+                end = graph.getNodeByName("Node A")!!,
+            ),
         )
         graph.addEdge(
             Edge(
                 start = graph.getNodeByName("Landmark B")!!,
-                end = graph.getNodeByName("Node B")!!
-            )
+                end = graph.getNodeByName("Node B")!!,
+            ),
         )
     }
 
@@ -84,8 +87,8 @@ class GraphTest {
         for (edge in graph.edges) {
             println(
                 "Edge from ${edge.start.name} at (${edge.start.position.first}, ${edge.start.position.second}) " +
-                        "to ${edge.end.name} at (${edge.end.position.first}, ${edge.end.position.second}), " +
-                        "Weight: ${edge.weight}"
+                    "to ${edge.end.name} at (${edge.end.position.first}, ${edge.end.position.second}), " +
+                    "Weight: ${edge.weight}",
             )
         }
         assertNotNull(route)
@@ -94,19 +97,16 @@ class GraphTest {
         assertEquals("Node A", route.getEdges()[0].end.name)
     }
 
-    //fill in later if necessary
+    // fill in later if necessary
     @Test
     fun testParseLandmarksFromCSV() {
-
     }
 
     @Test
     fun testParseNodesFromCSV() {
-
     }
 
     @Test
     fun testParseEdgesFromCSV() {
-
     }
 }

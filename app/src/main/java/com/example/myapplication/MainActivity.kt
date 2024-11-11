@@ -1,36 +1,30 @@
 package com.example.myapplication
 
 import android.annotation.SuppressLint
-
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log // Add this import
+import android.view.Menu
+import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.Toast
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import android.view.MotionEvent
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.ImageView
-import com.example.myapplication.databinding.ActivityMainBinding
-import java.lang.Math.random
-import android.util.Log  // Add this import
-import android.os.Handler
-import android.os.Looper
-import android.view.View
-import android.view.inputmethod.InputMethodManager
-import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.otaliastudios.zoom.ZoomLayout
+import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.databinding.ActivityMainBinding
 
 var user_curr_position = Pair(0.0, 0.0)
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var userLocationAccessor: UserLocationAccessor
     private lateinit var userRotationAccessor: UserRotationAccessor
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -45,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     // Handler for scheduling tasks
     private val handler = Handler(Looper.getMainLooper())
-    private lateinit var updateTask: Runnable  // Declare the task
+    private lateinit var updateTask: Runnable // Declare the task
     private var userLoc: Pair<Float, Float> = Pair(0.0f, 0.0f)
 
     @SuppressLint("ClickableViewAccessibility")
@@ -54,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //initialize graph
+        // initialize graph
         val edgeView: EdgeView = findViewById(R.id.edgeView)
         edgeView.setMap(findViewById(R.id.mapImage))
         val landmarkList = landMarkGraph.parseLandmarksFromCSV(this, R.raw.landmarkdata)
@@ -71,7 +65,10 @@ class MainActivity : AppCompatActivity() {
         for (edge in allEdges) {
             val firstNode = ConvertLocation(edge.start.position.first, edge.start.position.second)
             val secondNode = ConvertLocation(edge.end.position.first, edge.end.position.second)
-            Log.d("EdgeTest", "Edge: ${firstNode.first}, ${firstNode.second} -> ${secondNode.first}, ${secondNode.second}")
+            Log.d(
+                "EdgeTest",
+                "Edge: ${firstNode.first}, ${firstNode.second} -> ${secondNode.first}, ${secondNode.second}",
+            )
             edgeView.addEdge(edge)
         }
         // Initialize the UserLocationAccessor
@@ -92,25 +89,26 @@ class MainActivity : AppCompatActivity() {
         marker.bringToFront()
 
         // Define the task to run every 3 seconds
-        updateTask = object : Runnable {
-            override fun run() {
-                // Request user location and update display
-                userLocationAccessor.getUserLocation { coordinates ->
-                    if (coordinates != null) {
-                        // Update test location and rotation
-                        user_curr_position = Pair(coordinates.first, coordinates.second)
-                        userLoc = ConvertLocation(coordinates.first, coordinates.second)
-                        Log.d("LocationTest", "User is at ${userLoc.first}, ${userLoc.second}")
-                        DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)
-                        testRot = ConvertRotation(userRotationAccessor.getUserRotation())
-                        //Log.d("UpdateTask", "User is facing $testRot degrees from East")
-                        DisplayRotation(campusMap, marker, testRot)
+        updateTask =
+            object : Runnable {
+                override fun run() {
+                    // Request user location and update display
+                    userLocationAccessor.getUserLocation { coordinates ->
+                        if (coordinates != null) {
+                            // Update test location and rotation
+                            user_curr_position = Pair(coordinates.first, coordinates.second)
+                            userLoc = ConvertLocation(coordinates.first, coordinates.second)
+                            Log.d("LocationTest", "User is at ${userLoc.first}, ${userLoc.second}")
+                            DisplayLocation(campusMap, marker, userLoc.first, userLoc.second)
+                            testRot = ConvertRotation(userRotationAccessor.getUserRotation())
+                            // Log.d("UpdateTask", "User is facing $testRot degrees from East")
+                            displayRotation(campusMap, marker, testRot)
+                        }
                     }
+                    // Schedule the next run in 3 seconds (5000 milliseconds)
+                    handler.postDelayed(this, 1000)
                 }
-                // Schedule the next run in 3 seconds (5000 milliseconds)
-                handler.postDelayed(this, 1000)
             }
-        }
 
         cardView = findViewById(R.id.cardView)
         recyclerViewResults = findViewById(R.id.recyclerView)
@@ -119,40 +117,44 @@ class MainActivity : AppCompatActivity() {
         recyclerViewResults.adapter = resultsAdapter
 
         val searchView: SearchView = findViewById(R.id.searchView)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                // 当用户提交查询时，调用 FuzzySearch
-                if (query != null) {
-                    val results = FuzzySearch(query, allTerms)
-                    /*Log.d("MainActivity", "Query: $query")
-                    for (term in results)
-                    {
-                        Log.d("MainActivity", "Term: $term")
-                    }*/
-                    displayResults(results)
+        searchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    // 当用户提交查询时，调用 FuzzySearch
+                    if (query != null) {
+                        val results = fuzzySearch(query, allTerms)
+                        /*Log.d("MainActivity", "Query: $query")
+                        for (term in results)
+                        {
+                            Log.d("MainActivity", "Term: $term")
+                        }*/
+                        displayResults(results)
+                    }
+                    return true
                 }
-                return true
-            }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                // FuzzySearch
-                if (newText != null) {
-                    val results = FuzzySearch(newText, allTerms)
-                    displayResults(results)
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    // FuzzySearch
+                    if (newText != null) {
+                        val results = fuzzySearch(newText, allTerms)
+                        displayResults(results)
+                    }
+                    return true
                 }
-                return true
-            }
-        })
+            },
+        )
 
         campusMap.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     isClick = true
                 }
+
                 MotionEvent.ACTION_MOVE -> {
                     isClick = false
                     Log.d("MainActivity", "Image moved")
                 }
+
                 MotionEvent.ACTION_UP -> {
                     if (isClick) {
                         v.performClick()
@@ -163,14 +165,13 @@ class MainActivity : AppCompatActivity() {
                     }
                     Log.d("MainActivity", "Touch released")
                 }
+
                 MotionEvent.ACTION_CANCEL -> {
                     Log.d("MainActivity", "Touch canceled (gesture interrupted)")
                 }
             }
             true
         }
-
-
     }
 
     private fun displayResults(results: Array<String>) {
@@ -188,18 +189,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     fun onSearchResultSelected(selectedName: String) {
         // Find the SearchableNode corresponding to the selected name
         val selectedNode = landMarkGraph.getLandmarkNodeByName(selectedName)
         if (selectedNode != null) {
             // Update the marker position
-            val location = ConvertLocation(selectedNode.position.first, selectedNode.position.second)
-            DisplayLocation(findViewById(R.id.mapImage), findViewById(R.id.markerImage), location.first, location.second)
+            val location =
+                ConvertLocation(selectedNode.position.first, selectedNode.position.second)
+            DisplayLocation(
+                findViewById(R.id.mapImage),
+                findViewById(R.id.markerImage),
+                location.first,
+                location.second,
+            )
 
             // zoom into the location
-            //val zoomLayout = findViewById<ZoomLayout>(R.id.zoomLayout)
-            //zoomLayout.zoomTo(2f, true)
+            // val zoomLayout = findViewById<ZoomLayout>(R.id.zoomLayout)
+            // zoomLayout.zoomTo(2f, true)
 
             // take user to info & options page
             DisplayLocationInfo(this, selectedNode)
@@ -235,19 +241,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+        return navController.navigateUp(appBarConfiguration) ||
+            super.onSupportNavigateUp()
     }
 
-    //testing getUserLocation
+    // testing getUserLocation
     override fun onResume() {
-
         super.onResume()
         userLocationAccessor.stopLocationUpdates()
         handler.post(updateTask)
     }
-
-
 }
-
-

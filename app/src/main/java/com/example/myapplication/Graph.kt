@@ -3,11 +3,10 @@ package com.example.myapplication
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-class Graph() {
+class Graph {
     var nodes = emptyArray<Node>()
     var edges = emptyArray<Edge>()
 
@@ -19,9 +18,8 @@ class Graph() {
         edges += newEdge
     }
 
-    fun getAllEdges(): Array<Edge> {
-        return edges
-    }
+    fun getAllEdges(): Array<Edge> = edges
+
     fun getAllLandmarkNodeNames(): Array<String> {
         var outArray = emptyArray<String>()
         for (node in nodes) {
@@ -31,6 +29,7 @@ class Graph() {
         }
         return outArray
     }
+
     fun getNodeByName(name: String): Node? {
         for (node in nodes) {
             if (node.name.equals(name, ignoreCase = true)) {
@@ -49,14 +48,17 @@ class Graph() {
         return null
     }
 
-    fun parseLandmarksFromCSV(context: Context, resourceId: Int): List<LandmarkNode> {
+    fun parseLandmarksFromCSV(
+        context: Context,
+        resourceId: Int,
+    ): List<LandmarkNode> {
         val nodeList = mutableListOf<LandmarkNode>()
         val inputStream = context.resources.openRawResource(resourceId)
         val reader = BufferedReader(InputStreamReader(inputStream))
 
         try {
             var line: String?
-            reader.readLine()  // skip the title line
+            reader.readLine() // skip the title line
             while (reader.readLine().also { line = it } != null) {
                 line?.let {
                     val columns = it.split(",")
@@ -64,7 +66,8 @@ class Graph() {
                     val name = columns[0]
                     val lat = columns[1]
                     val long = columns[2]
-                    val tmp = LandmarkNode(position = Pair(lat.toDouble(), long.toDouble()), name = name)
+                    val tmp =
+                        LandmarkNode(position = Pair(lat.toDouble(), long.toDouble()), name = name)
                     nodeList.add(tmp)
                 }
             }
@@ -77,8 +80,10 @@ class Graph() {
         return nodeList
     }
 
-
-    fun parseNodesFromCSV(context: Context, resourceId: Int) {
+    fun parseNodesFromCSV(
+        context: Context,
+        resourceId: Int,
+    ) {
         val inputStream = context.resources.openRawResource(resourceId)
         val reader = BufferedReader(InputStreamReader(inputStream))
 
@@ -103,9 +108,11 @@ class Graph() {
         }
     }
 
-
     // Edge class is not implemented yet, but this should work when it is implemented and the two lines are uncommented.
-    fun parseEdgesFromCSV(context: Context, resourceId: Int){
+    fun parseEdgesFromCSV(
+        context: Context,
+        resourceId: Int,
+    ) {
         val inputStream = context.resources.openRawResource(resourceId)
         val reader = BufferedReader(InputStreamReader(inputStream))
         try {
@@ -130,14 +137,13 @@ class Graph() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            } finally {
+        } finally {
             reader.close()
         }
-
     }
 
     fun getClosestNode(position: Pair<Double, Double>): Node? {
-        if (nodes.isEmpty()) return null  // Return null if there are no nodes in the graph
+        if (nodes.isEmpty()) return null // Return null if there are no nodes in the graph
         var closestNode: Node? = null
         var minDistance = Double.POSITIVE_INFINITY
         // check all nodes for distance, then return the closest one
@@ -151,8 +157,11 @@ class Graph() {
         return closestNode
     }
 
-    //Dijkstra's to find shortest path
-    fun shortestPath(startNode: Node, endNode: Node): Route {
+    // Dijkstra's to find shortest path
+    fun shortestPath(
+        startNode: Node,
+        endNode: Node,
+    ): Route {
         val distances = mutableMapOf<Node, Double>().withDefault { Double.POSITIVE_INFINITY }
         val previousNodes = mutableMapOf<Node, Edge?>()
         val visited = mutableSetOf<Node>()
@@ -207,20 +216,21 @@ class Graph() {
         return route
     }
 
-    fun StartRoute(destination: Node) {
+    fun startRoute(destination: Node) {
         // Is this on map or using lat long irl?
         val userLocNode = Node(Pair(user_curr_position.first, user_curr_position.second), "Current")
         val startNode = getClosestNode(userLocNode.position)
         val handler = Handler(Looper.getMainLooper())
-        val updateTask: Runnable  // Declare the task
+        val updateTask: Runnable // Declare the task
         if (startNode != null) {
             val route = shortestPath(startNode, destination)
-            route.DisplayRoute()
+            route.displayRoute()
             // Should this be apart of this function? or should it be outside of it?
-            updateTask = object : Runnable {
-                override fun run() {
-                        if (!route.getEdges().isEmpty()) {
-                            route.HideTraversedEdges()
+            updateTask =
+                object : Runnable {
+                    override fun run() {
+                        if (route.getEdges().isNotEmpty()) {
+                            route.hideTraversedEdges()
                         }
                         /*
 
@@ -236,37 +246,38 @@ class Graph() {
                     }
                 }
         }
-
-
-
     }
-
-
-
 }
 
-//should hold all nodes, landmarks and others
-open class Node(val position: Pair<Double, Double>, val name: String) {
+// should hold all nodes, landmarks and others
+open class Node(
+    val position: Pair<Double, Double>,
+    val name: String,
+)
 
-}
+// only landmarks
+open class LandmarkNode(
+    position: Pair<Double, Double>,
+    name: String,
+) : Node(position, name)
 
-//only landmarks
-open class LandmarkNode(position: Pair<Double, Double>, name: String) : Node(position, name) {
-
-}
-
-open class Edge(val start: Node, val end: Node) {
+open class Edge(
+    val start: Node,
+    val end: Node,
+) {
     val weight: Double = CalculateDistance(start.position, end.position)
     private var sudoNode: Node = start
-    fun updateSudoNode(newPosition: Pair<Double, Double>, newName: String = sudoNode.name) {
+
+    fun updateSudoNode(
+        newPosition: Pair<Double, Double>,
+        newName: String = sudoNode.name,
+    ) {
         sudoNode = Node(newPosition, newName)
     }
-    fun getSudoNode(): Node {
-        return sudoNode
-    }
-    override fun toString(): String {
-        return "${start.name} to ${end.name} (Weight: $weight)"
-    }
+
+    fun getSudoNode(): Node = sudoNode
+
+    override fun toString(): String = "${start.name} to ${end.name} (Weight: $weight)"
 }
 
 open class Route {
@@ -276,27 +287,23 @@ open class Route {
         edges.add(edge)
     }
 
-    fun getEdges(): List<Edge> {
-        return edges
-    }
+    fun getEdges(): List<Edge> = edges
 
-    fun getTotalWeight(): Double {
-        return edges.sumOf { it.weight }
-    }
+    fun getTotalWeight(): Double = edges.sumOf { it.weight }
 
     fun setEdges(newEdges: List<Edge>) {
         edges.clear()
         edges.addAll(newEdges)
     }
-    fun DisplayRoute() {
+
+    fun displayRoute() {
         for (edge in edges) {
             println("${edge.start.name} to ${edge.end.name} (Weight: ${edge.weight})")
         }
     }
-    fun HideTraversedEdges(){
 
+    fun hideTraversedEdges() {
     }
-    override fun toString(): String {
-        return edges.joinToString(separator = " -> ") { "${it.start.name} to ${it.end.name} (Weight: ${it.weight})" }
-    }
+
+    override fun toString(): String = edges.joinToString(separator = " -> ") { "${it.start.name} to ${it.end.name} (Weight: ${it.weight})" }
 }
