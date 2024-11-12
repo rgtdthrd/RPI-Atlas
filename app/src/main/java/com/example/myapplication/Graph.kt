@@ -3,8 +3,13 @@ package com.example.myapplication
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
 import java.io.BufferedReader
 import java.io.InputStreamReader
+
 
 class Graph {
     var nodes = emptyArray<Node>()
@@ -251,7 +256,7 @@ class Graph {
 
 // should hold all nodes, landmarks and others
 open class Node(
-    val position: Pair<Double, Double>,
+    var position: Pair<Double, Double>,
     val name: String,
 )
 
@@ -263,16 +268,35 @@ open class LandmarkNode(
 
 open class Edge(
     val start: Node,
-    val end: Node,
+    val end: Node
 ) {
     val weight: Double = calculateDistance(start.position, end.position)
     private var sudoNode: Node = start
+    private var edgeView: EdgeView? = null
+
+    fun display(context: Context,container: FrameLayout,mapImage:ImageView) {
+        if (edgeView == null) {
+            edgeView = EdgeView(context).apply {
+                init(this@Edge,mapImage)
+            }
+            container.addView(edgeView)
+        }
+    }
+    fun hide(container: FrameLayout) {
+        Log.d("EdgeView", "Hiding edge")
+        edgeView?.let { view ->
+            container.removeView(view)
+            edgeView = null // Clear reference to allow garbage collection
+        }
+    }
+    fun update(userLoc: Pair<Double, Double>,container: FrameLayout) {
+        edgeView?.update(userLoc, container)
+    }
 
     fun updateSudoNode(
         newPosition: Pair<Double, Double>,
-        newName: String = sudoNode.name,
     ) {
-        sudoNode = Node(newPosition, newName)
+        sudoNode.position = newPosition
     }
 
     fun getSudoNode(): Node = sudoNode

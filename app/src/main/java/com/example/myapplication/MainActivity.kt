@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.Toast
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerViewResults: RecyclerView
     private lateinit var cardView: CardView
 
+    private var edgeTest = true
     private var isClick = false
     private var landMarkGraph = Graph()
 //    private var SearchResults = emptyArray<String>()
@@ -48,14 +50,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val campusMap: ImageView = findViewById(R.id.mapImage)
+        val marker: ImageView = findViewById(R.id.markerImage)
+        val edgeContainer: FrameLayout = findViewById(R.id.edgeContainer)
+        marker.bringToFront()
         // initialize graph
-        val edgeView: EdgeView = findViewById(R.id.edgeView)
-        edgeView.setMap(findViewById(R.id.mapImage))
         val landmarkList = landMarkGraph.parseLandmarksFromCSV(this, R.raw.landmarkdata)
         landMarkGraph.parseNodesFromCSV(this, R.raw.nodedata)
         landMarkGraph.parseEdgesFromCSV(this, R.raw.edgedata)
-
-        landMarkGraph.parseNodesFromCSV(this, R.raw.nodedata)
         // LandMarkGraph.ParseEdgesFromCSV(this, R.raw.edgedata)
         for (landmark in landmarkList) {
             landMarkGraph.addNode(landmark)
@@ -63,14 +65,9 @@ class MainActivity : AppCompatActivity() {
         val allEdges = landMarkGraph.getAllEdges()
         val allTerms = landMarkGraph.getAllLandmarkNodeNames()
         for (edge in allEdges) {
-            val firstNode = convertLocation(edge.start.position.first, edge.start.position.second)
-            val secondNode = convertLocation(edge.end.position.first, edge.end.position.second)
-            Log.d(
-                "EdgeTest",
-                "Edge: ${firstNode.first}, ${firstNode.second} -> ${secondNode.first}, ${secondNode.second}",
-            )
-            edgeView.addEdge(edge)
+            edge.display(this, edgeContainer, campusMap)
         }
+
         // Initialize the UserLocationAccessor
         userLocationAccessor = UserLocationAccessor(this, this)
 
@@ -82,11 +79,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         userRotationAccessor = UserRotationAccessor(this)
-        var testRot = convertRotation(userRotationAccessor.getUserRotation())
 
-        val campusMap: ImageView = findViewById(R.id.mapImage)
-        val marker: ImageView = findViewById(R.id.markerImage)
-        marker.bringToFront()
+
+
+
 
         // Define the task to run every 3 seconds
         updateTask =
@@ -100,13 +96,14 @@ class MainActivity : AppCompatActivity() {
                             userLoc = convertLocation(coordinates.first, coordinates.second)
                             Log.d("LocationTest", "User is at ${userLoc.first}, ${userLoc.second}")
                             displayLocation(campusMap, marker, userLoc.first, userLoc.second)
-                            testRot = convertRotation(userRotationAccessor.getUserRotation())
+                            val testRot = convertRotation(userRotationAccessor.getUserRotation())
                             // Log.d("UpdateTask", "User is facing $testRot degrees from East")
                             displayRotation(campusMap, marker, testRot)
                         }
                     }
+
                     // Schedule the next run in 3 seconds (5000 milliseconds)
-                    handler.postDelayed(this, 1000)
+                    handler.postDelayed(this, 3000)
                 }
             }
 
@@ -148,6 +145,20 @@ class MainActivity : AppCompatActivity() {
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     isClick = true
+
+                    // Toggle edge visibility
+                    if (edgeTest) {
+                        for (edge in allEdges) {
+                            edge.hide(edgeContainer)
+                        }
+                        edgeTest = false
+                    }else{
+                        for (edge in allEdges) {
+                            edge.display(this, edgeContainer, campusMap)
+                        }
+                        edgeTest = true
+                    }
+                    //end of toggle
                 }
 
                 MotionEvent.ACTION_MOVE -> {
@@ -163,6 +174,7 @@ class MainActivity : AppCompatActivity() {
                         recyclerViewResults.visibility = View.GONE
                         cardView.visibility = View.GONE
                     }
+
                     Log.d("MainActivity", "Touch released")
                 }
 
