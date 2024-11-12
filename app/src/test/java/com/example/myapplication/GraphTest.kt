@@ -98,9 +98,9 @@ class GraphTest {
             )
         }
         assertNotNull(route)
-//        assertEquals(1, route.getEdges().size) // Assuming 1 edge exists between these two nodes
-//        assertEquals("Landmark A", route.getEdges()[0].start.name)
-//        assertEquals("Node A", route.getEdges()[0].end.name)
+        assertEquals(3, route.getEdges().size) // Assuming 1 edge exists between these two nodes
+        assertEquals("Landmark A", route.getEdges()[0].start.name)
+        assertEquals("Node B", route.getEdges()[2].end.name)
     }
 
     // fill in later if necessary
