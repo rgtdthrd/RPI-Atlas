@@ -4,12 +4,10 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import java.io.BufferedReader
 import java.io.InputStreamReader
-
 
 class Graph {
     var nodes = emptyArray<Node>()
@@ -162,62 +160,92 @@ class Graph {
         return closestNode
     }
 
-    // Dijkstra's to find shortest path
+    // Dijkstra's to find shortest path between 2 nodes
     fun shortestPath(
         startNode: Node,
         endNode: Node,
     ): Route {
+        // Maps each node to the shortest distance from the start node, defaulting to infinity
         val distances = mutableMapOf<Node, Double>().withDefault { Double.POSITIVE_INFINITY }
+
+        // Keeps track of the previous edge leading to each node for path reconstruction
         val previousNodes = mutableMapOf<Node, Edge?>()
+
+        // Tracks nodes that have already been visited
         val visited = mutableSetOf<Node>()
+
+        // Priority queue for selecting the node with the shortest known distance
         val priorityQueue = java.util.PriorityQueue(compareBy<Pair<Node, Double>> { it.second })
 
-        // Set the initial distance to the starting node as 0
+        // Initialize start node's distance to 0 and add it to the queue
         distances[startNode] = 0.0
         priorityQueue.add(Pair(startNode, 0.0))
 
+        // Main loop: process nodes in order of distance from the start node
         while (priorityQueue.isNotEmpty()) {
-            // the !! asserts that its not null
+            // Get the node with the smallest distance in the queue
             val (currentNode, currentDistance) = priorityQueue.poll()!!
 
-            // Skip if already visited
+            // Skip this node if it’s already been visited
             if (visited.contains(currentNode)) continue
             visited.add(currentNode)
 
             // Stop if we've reached the end node
             if (currentNode == endNode) break
 
-            // Relax edges from the current node
+            // Iterate over all edges to find neighbors, treating each edge as bidirectional
             for (edge in edges) {
-                if (edge.start == currentNode) {
-                    val neighbor = edge.end
-                    if (!visited.contains(neighbor)) {
+                // Create pairs for both directions of the edge: (start -> end) and (end -> start)
+                val neighbors =
+                    listOf(
+                        edge.start to edge.end,
+                        edge.end to edge.start,
+                    )
+
+                // Check each direction (from -> to) to find unvisited neighbors
+                for ((from, to) in neighbors) {
+                    // If the current node is the start of this edge and the end is unvisited
+                    if (from == currentNode && !visited.contains(to)) {
+                        // Calculate the new distance to this neighbor
                         val newDistance = currentDistance + edge.weight
-                        if (newDistance < distances.getValue(neighbor)) {
-                            distances[neighbor] = newDistance
-                            previousNodes[neighbor] = edge
-                            priorityQueue.add(Pair(neighbor, newDistance))
+
+                        // If this path to 'to' is shorter, update distances and previousNodes
+                        if (newDistance < distances.getValue(to)) {
+                            distances[to] =
+                                newDistance // Update shortest distance to this node
+                            previousNodes[to] = edge // Record the edge leading to this node
+                            priorityQueue.add(
+                                Pair(
+                                    to,
+                                    newDistance,
+                                ),
+                            ) // Add the neighbor to the queue
                         }
                     }
                 }
             }
         }
 
-        // Reconstruct the path
+        // Reconstruct the shortest path by backtracking from the end node
         val route = Route()
         var currentNode: Node? = endNode
+
+        // Follow previous nodes from end node to start node, adding each edge to the route
         while (currentNode != null && previousNodes[currentNode] != null) {
             val edge = previousNodes[currentNode]
             if (edge != null) {
-                route.addEdge(edge)
-                currentNode = edge.start
+                route.addEdge(edge) // Add the edge to the route
+                // Move to the previous node, based on the direction of the edge
+                currentNode = if (edge.start == currentNode) edge.end else edge.start
             }
         }
 
-        // Reconstruct the path and reverse it since we built it backwards
+        // Reverse the collected edges to get the path from start to end
         val reversedEdges = route.getEdges().toMutableList()
         reversedEdges.reverse()
         route.setEdges(reversedEdges)
+
+        // Return the constructed route with the shortest path
         return route
     }
 
@@ -268,20 +296,26 @@ open class LandmarkNode(
 
 open class Edge(
     val start: Node,
-    val end: Node
+    val end: Node,
 ) {
     val weight: Double = calculateDistance(start.position, end.position)
     private var sudoNode: Node = start
     private var edgeView: EdgeView? = null
 
-    fun display(context: Context,container: FrameLayout,mapImage:ImageView) {
+    fun display(
+        context: Context,
+        container: FrameLayout,
+        mapImage: ImageView,
+    ) {
         if (edgeView == null) {
-            edgeView = EdgeView(context).apply {
-                init(this@Edge,mapImage)
-            }
+            edgeView =
+                EdgeView(context).apply {
+                    init(this@Edge, mapImage)
+                }
             container.addView(edgeView)
         }
     }
+
     fun hide(container: FrameLayout) {
         Log.d("EdgeView", "Hiding edge")
         edgeView?.let { view ->
@@ -289,13 +323,15 @@ open class Edge(
             edgeView = null // Clear reference to allow garbage collection
         }
     }
-    fun update(userLoc: Pair<Double, Double>,container: FrameLayout) {
+
+    fun update(
+        userLoc: Pair<Double, Double>,
+        container: FrameLayout,
+    ) {
         edgeView?.update(userLoc, container)
     }
 
-    fun updateSudoNode(
-        newPosition: Pair<Double, Double>,
-    ) {
+    fun updateSudoNode(newPosition: Pair<Double, Double>) {
         sudoNode.position = newPosition
     }
 
