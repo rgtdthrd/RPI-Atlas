@@ -64,7 +64,10 @@ class MainActivity : AppCompatActivity() {
         }
         val allEdges = landMarkGraph.getAllEdges()
         val allTerms = landMarkGraph.getAllLandmarkNodeNames()
-        for (edge in allEdges) {
+        val startNode = landMarkGraph.getNodeByName("Barton Hall")!!
+        val endNode = landMarkGraph.getNodeByName("Folsom Library")!!
+        val route = landMarkGraph.shortestPath(startNode, endNode)
+        for (edge in route.getEdges()) {
             edge.display(this, edgeContainer, campusMap)
         }
 
@@ -79,10 +82,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         userRotationAccessor = UserRotationAccessor(this)
-
-
-
-
 
         // Define the task to run every 3 seconds
         updateTask =
@@ -148,17 +147,17 @@ class MainActivity : AppCompatActivity() {
 
                     // Toggle edge visibility
                     if (edgeTest) {
-                        for (edge in allEdges) {
+                        for (edge in route.getEdges()) {
                             edge.hide(edgeContainer)
                         }
                         edgeTest = false
-                    }else{
-                        for (edge in allEdges) {
+                    } else {
+                        for (edge in route.getEdges()) {
                             edge.display(this, edgeContainer, campusMap)
                         }
                         edgeTest = true
                     }
-                    //end of toggle
+                    // end of toggle
                 }
 
                 MotionEvent.ACTION_MOVE -> {
