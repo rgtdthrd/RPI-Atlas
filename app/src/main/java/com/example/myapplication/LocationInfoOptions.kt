@@ -28,7 +28,8 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
 
         val startRouteButton = findViewById<Button>(R.id.startRouteButton)
         startRouteButton.setOnClickListener {
-            graph.startRoute(seedNode)
+            // commented out for now due to change in startRoute implementation.
+            // graph.startRoute(seedNode)
             finish()
         }
 

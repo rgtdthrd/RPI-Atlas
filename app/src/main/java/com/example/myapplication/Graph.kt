@@ -1,8 +1,6 @@
 package com.example.myapplication
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -249,25 +247,37 @@ class Graph {
         return route
     }
 
-    fun startRoute(destination: Node) {
-        // Is this on map or using lat long irl?
+    fun startRoute(
+        destination: Node,
+        context: Context,
+        container: FrameLayout,
+        mapImage: ImageView,
+    ): Boolean {
         val userLocNode = Node(Pair(userCurrPosition.first, userCurrPosition.second), "Current")
         val startNode = getClosestNode(userLocNode.position)
-        val handler = Handler(Looper.getMainLooper())
-        val updateTask: Runnable // Declare the task
+        var isFarFromDestination = true // Boolean to track proximity to destination
+
         if (startNode != null) {
             val route = shortestPath(startNode, destination)
-            // Should this be apart of this function? or should it be outside of it?
-            updateTask =
-                object : Runnable {
-                    override fun run() {
-                        if (route.getEdges().isNotEmpty()) {
-                        }
-                        // Schedule the next run in 3 seconds (3000 milliseconds)
-                        handler.postDelayed(this, 3000)
-                    }
-                }
+
+            // Display the calculated route on the map
+            route.displayRoute(context, container, mapImage)
+
+            // Check proximity to the destination
+            if (calculateDistance(
+                    userLocNode.position,
+                    destination.position,
+                ) < Companion.CLOSE_THRESHOLD
+            ) {
+                isFarFromDestination = false // Update the boolean
+            }
         }
+
+        return isFarFromDestination
+    }
+
+    companion object {
+        const val CLOSE_THRESHOLD = 0.02
     }
 }
 
