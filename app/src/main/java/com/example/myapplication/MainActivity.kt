@@ -77,18 +77,17 @@ class MainActivity : AppCompatActivity() {
 
         val allEdges = landMarkGraph.getAllEdges()
         val allTerms = landMarkGraph.getAllLandmarkNodeNames()
-        val startNode = landMarkGraph.getNodeByName("Barton Hall")!!
+        // val startNode = landMarkGraph.getNodeByName("Barton Hall")!!
         Log.d(
             "MainActivity",
             "User current location is ${userCurrPosition.first}, ${userCurrPosition.second}",
         )
         // var startNode = landMarkGraph.getClosestNode(userCurrPosition)!!
         val endNode = landMarkGraph.getNodeByName("Folsom Library")!!
-        val route = landMarkGraph.shortestPath(startNode, endNode)
-        route.displayRoute(this, edgeContainer, campusMap)
-//        for (edge in route.getEdges()) {
-//            edge.display(this, edgeContainer, campusMap)
-//        }
+        // val route = landMarkGraph.shortestPath(startNode, endNode)
+        // displaying route here using current location defaults
+        // to (0,0) as start for some reason
+        // landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
 
         // Define the task to run every 3 seconds
         updateTask =
@@ -157,11 +156,12 @@ class MainActivity : AppCompatActivity() {
 //                        for (edge in route.getEdges()) {
 //                            // edge.hide(edgeContainer)
 //                        }
-                        route.hideRoute(edgeContainer)
+                        landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
                         // false
                         edgeTest = false
                     } else {
-                        route.displayRoute(this, edgeContainer, campusMap)
+                        // route.displayRoute(this, edgeContainer, campusMap)
+                        landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
                         edgeTest = true
                     }
                     // end of toggle
