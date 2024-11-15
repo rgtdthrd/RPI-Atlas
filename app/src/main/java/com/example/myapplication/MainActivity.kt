@@ -62,14 +62,6 @@ class MainActivity : AppCompatActivity() {
         for (landmark in landmarkList) {
             landMarkGraph.addNode(landmark)
         }
-        val allEdges = landMarkGraph.getAllEdges()
-        val allTerms = landMarkGraph.getAllLandmarkNodeNames()
-        val startNode = landMarkGraph.getNodeByName("Barton Hall")!!
-        val endNode = landMarkGraph.getNodeByName("Folsom Library")!!
-        val route = landMarkGraph.shortestPath(startNode, endNode)
-        for (edge in route.getEdges()) {
-            edge.display(this, edgeContainer, campusMap)
-        }
 
         // Initialize the UserLocationAccessor
         userLocationAccessor = UserLocationAccessor(this, this)
@@ -82,6 +74,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         userRotationAccessor = UserRotationAccessor(this)
+
+        val allEdges = landMarkGraph.getAllEdges()
+        val allTerms = landMarkGraph.getAllLandmarkNodeNames()
+        val startNode = landMarkGraph.getNodeByName("Barton Hall")!!
+        Log.d(
+            "MainActivity",
+            "User current location is ${userCurrPosition.first}, ${userCurrPosition.second}",
+        )
+        // var startNode = landMarkGraph.getClosestNode(userCurrPosition)!!
+        val endNode = landMarkGraph.getNodeByName("Folsom Library")!!
+        val route = landMarkGraph.shortestPath(startNode, endNode)
+        route.displayRoute(this, edgeContainer, campusMap)
+//        for (edge in route.getEdges()) {
+//            edge.display(this, edgeContainer, campusMap)
+//        }
 
         // Define the task to run every 3 seconds
         updateTask =
@@ -147,14 +154,14 @@ class MainActivity : AppCompatActivity() {
 
                     // Toggle edge visibility
                     if (edgeTest) {
-                        for (edge in route.getEdges()) {
-                            edge.hide(edgeContainer)
-                        }
+//                        for (edge in route.getEdges()) {
+//                            // edge.hide(edgeContainer)
+//                        }
+                        route.hideRoute(edgeContainer)
+                        // false
                         edgeTest = false
                     } else {
-                        for (edge in route.getEdges()) {
-                            edge.display(this, edgeContainer, campusMap)
-                        }
+                        route.displayRoute(this, edgeContainer, campusMap)
                         edgeTest = true
                     }
                     // end of toggle

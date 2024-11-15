@@ -257,23 +257,12 @@ class Graph {
         val updateTask: Runnable // Declare the task
         if (startNode != null) {
             val route = shortestPath(startNode, destination)
-            route.displayRoute()
             // Should this be apart of this function? or should it be outside of it?
             updateTask =
                 object : Runnable {
                     override fun run() {
                         if (route.getEdges().isNotEmpty()) {
-                            route.hideTraversedEdges()
                         }
-                        /*
-
-                        Current way of doing this: create a copied list of edges (copied route)
-                        that get deleted as user passes through each edge
-
-                        Another way of doing this: Move this function to main, as user's location nears an edge node,
-                        hide that node until destination is reached
-                         */
-
                         // Schedule the next run in 3 seconds (3000 milliseconds)
                         handler.postDelayed(this, 3000)
                     }
@@ -356,13 +345,26 @@ open class Route {
         edges.addAll(newEdges)
     }
 
-    fun displayRoute() {
+    fun printRoute() {
         for (edge in edges) {
             println("${edge.start.name} to ${edge.end.name} (Weight: ${edge.weight})")
         }
     }
 
-    fun hideTraversedEdges() {
+    fun displayRoute(
+        context: Context,
+        container: FrameLayout,
+        mapImage: ImageView,
+    ) {
+        for (edge in edges) {
+            edge.display(context, container, mapImage)
+        }
+    }
+
+    fun hideRoute(container: FrameLayout) {
+        for (edge in edges) {
+            edge.hide(container)
+        }
     }
 
     override fun toString(): String = edges.joinToString(separator = " -> ") { "${it.start.name} to ${it.end.name} (Weight: ${it.weight})" }
