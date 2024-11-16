@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.ActivityMainBinding
 
 var userCurrPosition = Pair(0.0, 0.0)
+var landMarkGraph = Graph()
 
 class MainActivity : AppCompatActivity() {
     private lateinit var userLocationAccessor: UserLocationAccessor
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     private var edgeTest = true
     private var isClick = false
-    private var landMarkGraph = Graph()
+
 //    private var SearchResults = emptyArray<String>()
 
     // Handler for scheduling tasks
@@ -153,14 +154,14 @@ class MainActivity : AppCompatActivity() {
 
                     // Toggle edge visibility
                     if (edgeTest) {
-//                        for (edge in route.getEdges()) {
-//                            // edge.hide(edgeContainer)
-//                        }
-                        landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
+                        for (edge in allEdges) {
+                             edge.hide(edgeContainer)
+                        }
+//                        landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
                         // false
                         edgeTest = false
                     } else {
-                        // route.displayRoute(this, edgeContainer, campusMap)
+//                        route.displayRoute(this, edgeContainer, campusMap)
                         landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
                         edgeTest = true
                     }

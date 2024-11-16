@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -11,8 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlin.math.*
 
 private const val EARTHRADIUS = 6366707.0195
+private const val HUMANSPEED  = 0.075 // in km/min
 private var seedNode = LandmarkNode(Pair(0.0, 0.0), "N/A")
-private var graph = Graph() // different instance of graph?
+//private var graph = Graph() // different instance of graph?
 
 class LocationInfoAndOptionsActivity : AppCompatActivity() {
     private lateinit var userLocationAccessor: UserLocationAccessor
@@ -33,14 +35,26 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
             finish()
         }
 
+        val graph: Graph = landMarkGraph
+
         val backButton = findViewById<ImageButton>(R.id.backButton)
         backButton.setOnClickListener {
             finish() // Close the activity
         }
         userLocationAccessor = UserLocationAccessor(this, this)
 
+        // coordinates: user location
+        // seedNode: chosen landmark
         userLocationAccessor.getUserLocation { coordinates ->
             if (coordinates != null) {
+                val nearestNode = graph.getClosestNode(coordinates)
+                if (nearestNode != null) {
+                    println("NearNode is ${nearestNode.name}")
+                    println("seedNode is ${seedNode.name}")
+                    val route = graph.shortestPath(nearestNode, seedNode)
+                    println("Route distance: ${route.calculateDistance()}")
+                }
+
                 findViewById<TextView>(R.id.distance_text).text =
                     "Distance: ${calculateDistance(seedNode.position, coordinates)} km"
             }

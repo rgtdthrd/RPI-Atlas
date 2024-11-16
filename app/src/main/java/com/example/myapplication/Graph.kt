@@ -376,6 +376,13 @@ open class Route {
             edge.hide(container)
         }
     }
+    fun calculateDistance(): Double {
+        var distance = 0.0
+        for (edge in edges){
+            distance += edge.weight
+            }
+        return distance
+    }
 
     override fun toString(): String = edges.joinToString(separator = " -> ") { "${it.start.name} to ${it.end.name} (Weight: ${it.weight})" }
 }
