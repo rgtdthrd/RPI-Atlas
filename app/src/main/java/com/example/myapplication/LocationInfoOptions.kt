@@ -48,11 +48,13 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
         userLocationAccessor.getUserLocation { coordinates ->
             if (coordinates != null) {
                 val nearestNode = graph.getClosestNode(coordinates)
+                val endNode = graph.getClosestNode(seedNode.position)
                 if (nearestNode != null) {
                     println("NearNode is ${nearestNode.name}")
                     println("seedNode is ${seedNode.name}")
-                    val route = graph.shortestPath(nearestNode, seedNode)
+                    val route = graph.shortestPath(nearestNode, endNode!!)
                     println("Route distance: ${route.calculateDistance()}")
+                    findViewById<TextView>(R.id.ETA_text).text = "Estimated Arrival Time: ${route.calculateDistance() / HUMANSPEED} mins"
                 }
 
                 findViewById<TextView>(R.id.distance_text).text =
