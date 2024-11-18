@@ -38,8 +38,8 @@ private var referenceLocMap = Pair(0.0, 0.0)
 private var referenceLocPos = Pair(0.0, 0.0)
 const val IMAGE_WIDTH = 1582
 const val IMAGE_HEIGHT = 1285
-private const val X_OFFSET = -9.0f
-private const val Y_OFFSET = -5.0f
+const val X_OFFSET = -9.0f
+const val Y_OFFSET = -5.0f
 
 private fun getReferencePoints() {
     val locmapToDouble =
