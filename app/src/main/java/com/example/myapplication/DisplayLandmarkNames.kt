@@ -14,7 +14,7 @@ import android.graphics.Typeface
 
 class DisplayLandmarkNames(context: Context, attrs: AttributeSet? = null) : View(context, attrs){
     private val paint = Paint().apply {
-        color = android.graphics.Color.argb(150, 0, 0, 200)
+        color = android.graphics.Color.argb(200, 0, 0, 200)
         style = Paint.Style.FILL_AND_STROKE
         strokeWidth = 1.5f
         textSize = 18f
