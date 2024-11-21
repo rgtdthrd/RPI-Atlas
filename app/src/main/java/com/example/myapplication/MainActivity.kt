@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.SearchView
@@ -63,6 +64,15 @@ class MainActivity : AppCompatActivity() {
         for (landmark in landmarkList) {
             landMarkGraph.addNode(landmark)
         }
+
+        val endRouteButton = findViewById<Button>(R.id.endRouteButton)
+        endRouteButton.setOnClickListener {
+            landMarkGraph.endCurrentRoute(edgeContainer)
+            endRouteButton.visibility = View.GONE
+        }
+
+        // hide endRouteButton
+        endRouteButton.visibility = View.GONE
 
         // Initialize the UserLocationAccessor
         userLocationAccessor = UserLocationAccessor(this, this)
@@ -165,6 +175,8 @@ class MainActivity : AppCompatActivity() {
                     } else {
 //                        route.displayRoute(this, edgeContainer, campusMap)
                         landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
+                        // unhide endRouteButton
+                        endRouteButton.visibility = View.VISIBLE
                         edgeTest = true
                     }
                     // end of toggle
