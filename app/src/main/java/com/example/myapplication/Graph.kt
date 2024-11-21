@@ -10,6 +10,7 @@ import java.io.InputStreamReader
 class Graph {
     var nodes = emptyArray<Node>()
     var edges = emptyArray<Edge>()
+    private var currentRoute: Route? = null
 
     fun addNode(newNode: Node) {
         nodes += newNode
@@ -255,13 +256,18 @@ class Graph {
     ): Boolean {
         val userLocNode = Node(Pair(userCurrPosition.first, userCurrPosition.second), "Current")
         val startNode = getClosestNode(userLocNode.position)
-        var isFarFromDestination = true // Boolean to track proximity to destination
+        var userFarFromDest = true
 
         if (startNode != null) {
-            val route = shortestPath(startNode, destination)
+            // Hide the currently displayed route if it exists
+            currentRoute?.hideRoute(container)
 
-            // Display the calculated route on the map
+            // Calculate and display the new route
+            val route = shortestPath(startNode, destination)
             route.displayRoute(context, container, mapImage)
+
+            // Save the new route as the currently displayed one
+            currentRoute = route
 
             // Check proximity to the destination
             if (calculateDistance(
@@ -269,11 +275,16 @@ class Graph {
                     destination.position,
                 ) < Companion.CLOSE_THRESHOLD
             ) {
-                isFarFromDestination = false // Update the boolean
+                userFarFromDest = false
             }
         }
 
-        return isFarFromDestination
+        return userFarFromDest
+    }
+
+    fun endCurrentRoute(container: FrameLayout) {
+        currentRoute?.hideRoute(container)
+        currentRoute = null // Clear the reference after hiding
     }
 
     companion object {
@@ -376,11 +387,12 @@ open class Route {
             edge.hide(container)
         }
     }
+
     fun calculateDistance(): Double {
         var distance = 0.0
-        for (edge in edges){
+        for (edge in edges) {
             distance += edge.weight
-            }
+        }
         return distance
     }
 

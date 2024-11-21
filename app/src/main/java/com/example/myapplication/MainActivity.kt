@@ -80,8 +80,6 @@ class MainActivity : AppCompatActivity() {
         val displayLandmarkNames = findViewById<DisplayLandmarkNames>(R.id.landmarkView)
         displayLandmarkNames.init(campusMap, landMarkGraph)
 
-
-
         val allEdges = landMarkGraph.getAllEdges()
         val allTerms = landMarkGraph.getAllLandmarkNodeNames()
         // val startNode = landMarkGraph.getNodeByName("Barton Hall")!!
@@ -160,9 +158,7 @@ class MainActivity : AppCompatActivity() {
 
                     // Toggle edge visibility
                     if (edgeTest) {
-                        for (edge in allEdges) {
-                             edge.hide(edgeContainer)
-                        }
+                        landMarkGraph.endCurrentRoute(edgeContainer)
 //                        landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
                         // false
                         edgeTest = false
