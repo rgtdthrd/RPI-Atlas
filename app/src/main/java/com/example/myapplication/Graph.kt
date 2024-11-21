@@ -253,10 +253,9 @@ class Graph {
         context: Context,
         container: FrameLayout,
         mapImage: ImageView,
-    ): Boolean {
+    ) {
         val userLocNode = Node(Pair(userCurrPosition.first, userCurrPosition.second), "Current")
         val startNode = getClosestNode(userLocNode.position)
-        var userFarFromDest = true
 
         if (startNode != null) {
             // Hide the currently displayed route if it exists
@@ -268,27 +267,12 @@ class Graph {
 
             // Save the new route as the currently displayed one
             currentRoute = route
-
-            // Check proximity to the destination
-            if (calculateDistance(
-                    userLocNode.position,
-                    destination.position,
-                ) < Companion.CLOSE_THRESHOLD
-            ) {
-                userFarFromDest = false
-            }
         }
-
-        return userFarFromDest
     }
 
     fun endCurrentRoute(container: FrameLayout) {
         currentRoute?.hideRoute(container)
         currentRoute = null // Clear the reference after hiding
-    }
-
-    companion object {
-        const val CLOSE_THRESHOLD = 0.02
     }
 }
 
