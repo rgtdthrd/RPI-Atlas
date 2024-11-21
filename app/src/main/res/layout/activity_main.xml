@@ -36,6 +36,11 @@
                 app:srcCompat="@drawable/campus_map"
                 tools:visibility="visible" />
 
+            <com.example.myapplication.DisplayLandmarkNames
+                android:id="@+id/landmarkView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
             <ImageView
                 android:id="@+id/markerImage"
                 android:layout_width="10dp"

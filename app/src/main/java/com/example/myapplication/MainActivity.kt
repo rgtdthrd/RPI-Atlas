@@ -76,15 +76,11 @@ class MainActivity : AppCompatActivity() {
 
         userRotationAccessor = UserRotationAccessor(this)
 
-        // Create an instance of DisplayLandmarkNames
-        val displayLandmarkNames = DisplayLandmarkNames()
+        // Display Landmark Names
+        val displayLandmarkNames = findViewById<DisplayLandmarkNames>(R.id.landmarkView)
+        displayLandmarkNames.init(campusMap, landMarkGraph)
 
-        // Call displayLandmarkNames
-        displayLandmarkNames.displayLandmarkNames(
-            context = this,
-            landmarkGraph = landMarkGraph,
-            parentLayout = edgeContainer
-        )
+
 
         val allEdges = landMarkGraph.getAllEdges()
         val allTerms = landMarkGraph.getAllLandmarkNodeNames()
