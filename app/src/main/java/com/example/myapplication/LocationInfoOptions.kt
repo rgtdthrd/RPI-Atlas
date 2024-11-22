@@ -8,10 +8,12 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlin.math.*
 
 private const val EARTHRADIUS = 6366707.0195
-private const val HUMANSPEED = 0.075 // in km/min
+var currentSpeed = 0.075 // in km/min
 private var seedNode = LandmarkNode(Pair(0.0, 0.0), "N/A")
 // private var graph = Graph() // different instance of graph?
 
@@ -53,7 +55,8 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
                     println("seedNode is ${seedNode.name}")
                     val route = graph.shortestPath(nearestNode, endNode!!)
                     println("Route distance: ${route.calculateDistance()}")
-                    findViewById<TextView>(R.id.ETA_text).text = "Estimated Arrival Time: ${route.calculateDistance() / HUMANSPEED} mins"
+                    val eta = route.calculateDistance() / currentSpeed
+                    findViewById<TextView>(R.id.ETA_text).text = "Estimated Arrival Time: ${ BigDecimal(eta).setScale(2, RoundingMode.HALF_UP).toDouble()} mins"
                 }
 
                 findViewById<TextView>(R.id.distance_text).text =

@@ -6,7 +6,11 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
+    <string-array name="spinner_options">
+        <item>Walking Mode</item>
+        <item>Bicycle Mode</item>
+        <item>Scooter Mode</item>
+    </string-array>
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
@@ -44,4 +48,19 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="marker">marker</string>
+    <string name="setting_icon_clickable">Open settings</string>
+    <string name="accessibility_mode">Accessibility Mode</string>
+    <string name="back">Back</string>
+    <string name="none">none</string>
+    <string name="settings">Settings</string>
+    <string name="AccessibilityMode">Accessibility Mode</string>
+    <string name="walking_speed">Walking Speed</string>
+    <string name="walking_speed_icon">Walking speed icon</string>
+    <string name="walking_speed_spinner_desc">Select walking speed</string>
+    <string-array name="walking_speed_options">
+        <item>Walking</item>
+        <item>Biking</item>
+        <item>Scootering</item>
+    </string-array>
+
 </resources>
