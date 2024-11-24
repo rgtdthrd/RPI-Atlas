@@ -384,3 +384,8 @@ open class Route {
 
     override fun toString(): String = edges.joinToString(separator = " -> ") { "${it.start.name} to ${it.end.name} (Weight: ${it.weight})" }
 }
+
+open class Pin(
+    position: Pair<Double, Double>,
+    name: String,
+) : Node(position, name)
