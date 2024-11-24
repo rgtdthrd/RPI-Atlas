@@ -126,10 +126,11 @@ class Graph {
                     assert(columns.size == 3)
                     val nodeName1 = columns[0]
                     val nodeName2 = columns[1]
+                    val accessible = columns[2]
                     val start = getNodeByName(nodeName1)
                     val end = getNodeByName(nodeName2)
                     if (start != null && end != null) {
-                        val edge = Edge(start = start, end = end)
+                        val edge = Edge(start = start, end = end, accessible = accessible)
                         addEdge(edge)
                     } else {
                         // Handle the case where a node was not found
@@ -291,6 +292,7 @@ open class LandmarkNode(
 open class Edge(
     val start: Node,
     val end: Node,
+    val accessible: String,
 ) {
     val weight: Double = calculateDistance(start.position, end.position)
     private var sudoNode: Node = start
