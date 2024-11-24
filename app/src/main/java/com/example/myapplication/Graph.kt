@@ -110,7 +110,7 @@ class Graph {
         }
     }
 
-    // Edge class is not implemented yet, but this should work when it is implemented and the two lines are uncommented.
+    // Parses edges and adds them to the graph from the edgedata.csv file
     fun parseEdgesFromCSV(
         context: Context,
         resourceId: Int,
@@ -123,7 +123,7 @@ class Graph {
             while (reader.readLine().also { line = it } != null) {
                 line?.let {
                     val columns = it.split(",")
-                    assert(columns.size == 2)
+                    assert(columns.size == 3)
                     val nodeName1 = columns[0]
                     val nodeName2 = columns[1]
                     val start = getNodeByName(nodeName1)
