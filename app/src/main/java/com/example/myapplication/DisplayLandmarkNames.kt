@@ -13,6 +13,7 @@ import android.graphics.Typeface
 // Class to display landmark names on the map
 
 class DisplayLandmarkNames(context: Context, attrs: AttributeSet? = null) : View(context, attrs){
+    // Visual properties of the landmark name text
     private val paint = Paint().apply {
         color = android.graphics.Color.argb(200, 0, 0, 200)
         style = Paint.Style.FILL_AND_STROKE
@@ -61,6 +62,7 @@ class DisplayLandmarkNames(context: Context, attrs: AttributeSet? = null) : View
         }
     }
 
+    // Function that displays landmark names on the map
     override fun onDraw(canvas: Canvas){
         super.onDraw(canvas)
         val mapWidth = map.width.toFloat()

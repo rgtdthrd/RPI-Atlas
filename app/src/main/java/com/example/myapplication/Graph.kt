@@ -7,6 +7,8 @@ import android.widget.ImageView
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
+// Graph structure to represent the map of RPI campus
+// where nodes are locations on campus and edges are roads or pathways between locations
 class Graph {
     var nodes = emptyArray<Node>()
     var edges = emptyArray<Edge>()
@@ -50,6 +52,7 @@ class Graph {
         return null
     }
 
+    // Retrieve landmarks from CSV file
     fun parseLandmarksFromCSV(
         context: Context,
         resourceId: Int,
@@ -60,7 +63,9 @@ class Graph {
 
         try {
             var line: String?
-            reader.readLine() // skip the title line
+
+            // skip the title line
+            reader.readLine()
             while (reader.readLine().also { line = it } != null) {
                 line?.let {
                     val columns = it.split(",")
@@ -82,6 +87,7 @@ class Graph {
         return nodeList
     }
 
+    // Parses non-landmark nodes and adds them to the graph from the nodedata.csv file
     fun parseNodesFromCSV(
         context: Context,
         resourceId: Int,
@@ -336,6 +342,8 @@ open class Edge(
     override fun toString(): String = "${start.name} to ${end.name} (Weight: $weight)"
 }
 
+// Route class representing the path between the user's location and the destination
+// Responsible for calculating, displaying, and hiding the route on the map
 open class Route {
     private val edges: MutableList<Edge> = mutableListOf()
 
@@ -385,6 +393,7 @@ open class Route {
     override fun toString(): String = edges.joinToString(separator = " -> ") { "${it.start.name} to ${it.end.name} (Weight: ${it.weight})" }
 }
 
+// Pin class to represent a user placed location on the map
 open class Pin(
     position: Pair<Double, Double>,
     name: String,

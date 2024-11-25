@@ -40,8 +40,6 @@ class MainActivity : AppCompatActivity() {
     private var edgeTest = true
     private var isClick = false
 
-//    private var SearchResults = emptyArray<String>()
-
     // Handler for scheduling tasks
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var updateTask: Runnable // Declare the task
@@ -172,11 +170,11 @@ class MainActivity : AppCompatActivity() {
                     // Toggle edge visibility
                     if (edgeTest) {
                         landMarkGraph.endCurrentRoute(edgeContainer)
-//                        landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
+                        // landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
                         // false
                         edgeTest = false
                     } else {
-//                        route.displayRoute(this, edgeContainer, campusMap)
+                        //route.displayRoute(this, edgeContainer, campusMap)
                         landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
                         // unhide endRouteButton
                         endRouteButton.visibility = View.VISIBLE
