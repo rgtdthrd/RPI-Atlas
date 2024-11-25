@@ -117,14 +117,8 @@ class MainActivity : AppCompatActivity() {
         searchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    // 当用户提交查询时，调用 FuzzySearch
                     if (query != null) {
                         val results = fuzzySearch(query, allTerms)
-                        /*Log.d("MainActivity", "Query: $query")
-                        for (term in results)
-                        {
-                            Log.d("MainActivity", "Term: $term")
-                        }*/
                         displayResults(results)
                     }
                     return true
