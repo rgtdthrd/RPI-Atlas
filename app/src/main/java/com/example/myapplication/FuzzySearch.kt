@@ -1,6 +1,6 @@
 package com.example.myapplication
 
-const val NUMRESULTS = 5
+const val RESULTS = 5
 
 private fun editDistance(
     s: String,
@@ -8,7 +8,7 @@ private fun editDistance(
 ): Int {
     val m = s.length
     val n = t.length
-    val d = Array(m + 1) { Array<Int>(n + 1) { 0 } }
+    val d = Array(m + 1) { Array(n + 1) { 0 } }
     for (i in 1..m) {
         d[i][0] = i
     }
@@ -18,10 +18,10 @@ private fun editDistance(
     var cost: Int
     for (j in 1..n) {
         for (i in 1..m) {
-            if (s[i - 1] == t[j - 1]) {
-                cost = 0
+            cost = if (s[i - 1] == t[j - 1]) {
+                0
             } else {
-                cost = 1
+                1
             }
             d[i][j] =
                 minOf(
@@ -40,19 +40,19 @@ private fun matchVal(
 ): Int = editDistance(s.uppercase(), t.uppercase())
 
 fun fuzzySearch(
-    searchword: String,
-    all_terms: Array<String>,
+    searchWord: String,
+    allTerms: Array<String>,
 ): Array<String> {
     val scores = mutableMapOf<String, Int>()
-    for (term in all_terms) {
+    for (term in allTerms) {
         scores[term] =
-            matchVal(searchword, term.substring(0, minOf(searchword.length, term.length)))
+            matchVal(searchWord, term.substring(0, minOf(searchWord.length, term.length)))
     }
-    val newmap = scores.toSortedMap(compareBy<String> { scores[it] }.thenBy { it })
-    val results = Array<String>(NUMRESULTS) { " " }
+    val newMap = scores.toSortedMap(compareBy<String> { scores[it] }.thenBy { it })
+    val results = Array(RESULTS) { " " }
     var i = 0
-    for (result in newmap.keys) {
-        if (i < NUMRESULTS) {
+    for (result in newMap.keys) {
+        if (i < RESULTS) {
             results[i] = result
             i++
         }
