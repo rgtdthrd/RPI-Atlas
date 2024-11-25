@@ -166,21 +166,6 @@ class MainActivity : AppCompatActivity() {
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     isClick = true
-
-                    // Toggle edge visibility
-                    if (edgeTest) {
-                        landMarkGraph.endCurrentRoute(edgeContainer)
-                        // landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
-                        // false
-                        edgeTest = false
-                    } else {
-                        //route.displayRoute(this, edgeContainer, campusMap)
-                        landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
-                        // unhide endRouteButton
-                        endRouteButton.visibility = View.VISIBLE
-                        edgeTest = true
-                    }
-                    // end of toggle
                 }
 
                 MotionEvent.ACTION_MOVE -> {
