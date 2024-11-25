@@ -57,6 +57,12 @@
     <string name="walking_speed">Walking Speed</string>
     <string name="walking_speed_icon">Walking speed icon</string>
     <string name="walking_speed_spinner_desc">Select walking speed</string>
+    <string name="longitude">LONGITUDE</string>
+    <string name="start_route">Start Route</string>
+    <string name="latitude">LATITUDE</string>
+    <string name="distance_calculating">Distance: Calculating...</string>
+    <string name="estimate_arrival_time_calculating">Estimate Arrival Time: Calculating...</string>
+    <string name="name_goes_here">NAME GOES HERE</string>
     <string-array name="walking_speed_options">
         <item>Walking</item>
         <item>Biking</item>
