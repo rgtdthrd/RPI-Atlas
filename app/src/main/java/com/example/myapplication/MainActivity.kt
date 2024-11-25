@@ -10,7 +10,9 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.Toast
@@ -24,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.ActivityMainBinding
 
 var userCurrPosition = Pair(0.0, 0.0)
+var landMarkGraph = Graph()
 
 class MainActivity : AppCompatActivity() {
     private lateinit var userLocationAccessor: UserLocationAccessor
@@ -34,10 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerViewResults: RecyclerView
     private lateinit var cardView: CardView
 
-    private var edgeTest = true
     private var isClick = false
-    private var landMarkGraph = Graph()
-//    private var SearchResults = emptyArray<String>()
 
     // Handler for scheduling tasks
     private val handler = Handler(Looper.getMainLooper())
@@ -49,6 +49,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val sharedPreferences = getSharedPreferences("AppSettings", MODE_PRIVATE)
+        AccessibilityMode = sharedPreferences.getBoolean("accessibilityMode", false)
+        val savedSpeedIndex = sharedPreferences.getInt("WalkingSpeed", 0)
+        val speedMap = mapOf(0 to 0.075, 1 to 0.25, 2 to 0.333)
+        currentSpeed = speedMap[savedSpeedIndex] ?: 0.075
 
         val campusMap: ImageView = findViewById(R.id.mapImage)
         val marker: ImageView = findViewById(R.id.markerImage)
@@ -62,11 +67,15 @@ class MainActivity : AppCompatActivity() {
         for (landmark in landmarkList) {
             landMarkGraph.addNode(landmark)
         }
-        val allEdges = landMarkGraph.getAllEdges()
-        val allTerms = landMarkGraph.getAllLandmarkNodeNames()
-        for (edge in allEdges) {
-            edge.display(this, edgeContainer, campusMap)
+
+        val endRouteButton = findViewById<Button>(R.id.endRouteButton)
+        endRouteButton.setOnClickListener {
+            landMarkGraph.endCurrentRoute(edgeContainer)
+            endRouteButton.visibility = View.GONE
         }
+
+        // hide endRouteButton
+        endRouteButton.visibility = View.GONE
 
         // Initialize the UserLocationAccessor
         userLocationAccessor = UserLocationAccessor(this, this)
@@ -80,9 +89,23 @@ class MainActivity : AppCompatActivity() {
 
         userRotationAccessor = UserRotationAccessor(this)
 
+        // Display Landmark Names
+        val displayLandmarkNames = findViewById<DisplayLandmarkNames>(R.id.landmarkView)
+        displayLandmarkNames.init(campusMap, landMarkGraph)
 
 
-
+        val allTerms = landMarkGraph.getAllLandmarkNodeNames()
+        // val startNode = landMarkGraph.getNodeByName("Barton Hall")!!
+        Log.d(
+            "MainActivity",
+            "User current location is ${userCurrPosition.first}, ${userCurrPosition.second}",
+        )
+        // var startNode = landMarkGraph.getClosestNode(userCurrPosition)!!
+//        val endNode = landMarkGraph.getNodeByName("Folsom Library")!!
+        // val route = landMarkGraph.shortestPath(startNode, endNode)
+        // displaying route here using current location defaults
+        // to (0,0) as start for some reason
+        // landMarkGraph.startRoute(endNode, this, edgeContainer, campusMap)
 
         // Define the task to run every 3 seconds
         updateTask =
@@ -134,25 +157,13 @@ class MainActivity : AppCompatActivity() {
                 }
             },
         )
-
+        findViewById<ImageButton>(R.id.SettingButton).setOnClickListener {
+            displaySettingPage(this)
+        }
         campusMap.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     isClick = true
-
-                    // Toggle edge visibility
-                    if (edgeTest) {
-                        for (edge in allEdges) {
-                            edge.hide(edgeContainer)
-                        }
-                        edgeTest = false
-                    }else{
-                        for (edge in allEdges) {
-                            edge.display(this, edgeContainer, campusMap)
-                        }
-                        edgeTest = true
-                    }
-                    //end of toggle
                 }
 
                 MotionEvent.ACTION_MOVE -> {

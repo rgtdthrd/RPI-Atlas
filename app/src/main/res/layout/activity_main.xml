@@ -20,9 +20,10 @@
         app:transformation="centerCrop">
 
         <FrameLayout
+            android:id="@+id/edgeContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id = "@+id/edgeContainer">
+            android:layout_height="match_parent">
+
             <ImageView
                 android:id="@+id/mapImage"
                 android:layout_width="match_parent"
@@ -35,6 +36,11 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/campus_map"
                 tools:visibility="visible" />
+
+            <com.example.myapplication.DisplayLandmarkNames
+                android:id="@+id/landmarkView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <ImageView
                 android:id="@+id/markerImage"
@@ -54,23 +60,46 @@
     </com.otaliastudios.zoom.ZoomLayout>
 
 
-
     <SearchView
         android:id="@+id/searchView"
-        android:layout_width="match_parent"
+        android:layout_width="330dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="100dp"
+
         android:background="@drawable/searchbutton"
-        android:queryHint="search for location"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:iconifiedByDefault="false"
+        android:queryHint="search for location"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/zoomLayout">
 
     </SearchView>
+    <ImageButton
+        android:contentDescription="@string/setting_icon_clickable"
+        app:srcCompat = "@drawable/setting_icon"
+        android:id="@+id/SettingButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="10dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/searchView"
+        app:layout_constraintTop_toTopOf="@+id/searchView"
+        app:layout_constraintStart_toEndOf="@+id/searchView"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
+
+    <Button
+        android:id="@+id/endRouteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="End Route"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"

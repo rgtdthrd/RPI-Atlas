@@ -14,10 +14,11 @@ class EdgeView(
     context: Context,
     attrs: AttributeSet? = null,
 ) : View(context, attrs) {
+    // Visual properties of the edge
     private val paint =
         Paint().apply {
-            color = android.graphics.Color.RED // Set your desired color
-            strokeWidth = 10f // Set your desired thickness
+            color = android.graphics.Color.RED
+            strokeWidth = 10f
         }
 
     private lateinit var edge: Edge
@@ -33,15 +34,17 @@ class EdgeView(
         // Determine if the edge has been traversed
         val threshold = 5.0
         if (distanceToEnd < threshold) {
-            // Edge fully traversed; handle edge completion logic if necessary
+            // Edge fully traversed
             edge.hide(container)
             Log.d("EdgeView", "Edge fully traversed")
         } else {
             edge.updateSudoNode(Pair(newSudoX, newSudoY))
 
         }
-        invalidate()  // Redraw the view with updated edges
+        // Redraw the view with updated edges
+        invalidate()
     }
+    // Function to get the closest point on the edge to the user's location
     private fun getClosestPointOnEdge(
         userLoc: Pair<Double, Double>,
     ): Pair<Double, Double> {
@@ -50,7 +53,8 @@ class EdgeView(
         val (px, py) = userLoc
 
         val edgeLengthSquared = (x2 - x1).pow(2) + (y2 - y1).pow(2)
-        if (edgeLengthSquared == 0.0) return Pair(x1, y1) // If the edge is a single point
+        // If the edge is a single point
+        if (edgeLengthSquared == 0.0) return Pair(x1, y1)
 
         val t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / edgeLengthSquared
         val clampedT = t.coerceIn(0.0, 1.0)
@@ -60,6 +64,7 @@ class EdgeView(
 
         return Pair(closestX, closestY)
     }
+    // Function to draw the edges on the map
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         map.let { mapView ->

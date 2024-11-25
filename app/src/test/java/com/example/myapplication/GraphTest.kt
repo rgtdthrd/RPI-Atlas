@@ -21,8 +21,8 @@ class GraphTest {
 
         val nodes =
             listOf(
-                Node(Pair(1.0, 2.0), "Node A"),
-                Node(Pair(3.0, 4.0), "Node B"),
+                Node(Pair(11.0, 21.0), "Node A"),
+                Node(Pair(16.0, 26.0), "Node B"),
             )
 
         for (landmark in landmarks) {
@@ -43,6 +43,12 @@ class GraphTest {
         graph.addEdge(
             Edge(
                 start = graph.getNodeByName("Landmark B")!!,
+                end = graph.getNodeByName("Node B")!!,
+            ),
+        )
+        graph.addEdge(
+            Edge(
+                start = graph.getNodeByName("Node A")!!,
                 end = graph.getNodeByName("Node B")!!,
             ),
         )
@@ -76,15 +82,15 @@ class GraphTest {
     fun testGetClosestNode() {
         val closestNode = graph.getClosestNode(Pair(10.5, 20.5))
         assertNotNull(closestNode)
-        assertEquals("Landmark A", closestNode!!.name)
+        assertEquals("Node A", closestNode!!.name)
     }
 
     @Test
     fun testShortestPath() {
         val startNode = graph.getNodeByName("Landmark A")!!
-        val endNode = graph.getNodeByName("Node A")!!
+        val endNode = graph.getNodeByName("Landmark B")!!
         val route = graph.shortestPath(startNode, endNode)
-        for (edge in graph.edges) {
+        for (edge in route.getEdges()) {
             println(
                 "Edge from ${edge.start.name} at (${edge.start.position.first}, ${edge.start.position.second}) " +
                     "to ${edge.end.name} at (${edge.end.position.first}, ${edge.end.position.second}), " +
@@ -92,9 +98,9 @@ class GraphTest {
             )
         }
         assertNotNull(route)
-        assertEquals(1, route.getEdges().size) // Assuming 1 edge exists between these two nodes
+        assertEquals(3, route.getEdges().size) // Assuming 1 edge exists between these two nodes
         assertEquals("Landmark A", route.getEdges()[0].start.name)
-        assertEquals("Node A", route.getEdges()[0].end.name)
+        assertEquals("Node B", route.getEdges()[2].end.name)
     }
 
     // fill in later if necessary
