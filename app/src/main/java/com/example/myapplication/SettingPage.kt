@@ -1,6 +1,7 @@
 package com.example.myapplication
 
-
+import android.content.SharedPreferences
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,23 +11,35 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Spinner
+import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 
-
+var AccessibilityMode = false
 class SettingPage : AppCompatActivity() {
     private val speedModeMap = mapOf(
         0.075 to "Walking",
         0.25 to "Biking",
         0.333 to "Scootering"
     )
+    private lateinit var sharedPreferences: SharedPreferences
     private val modeSpeedMap = speedModeMap.entries.associate { it.value to it.key }
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings)
+        sharedPreferences = getSharedPreferences("AppSettings", MODE_PRIVATE)
         val speedSpinner = findViewById<Spinner>(R.id.walking_speed_spinner)
         val modes = listOf("Walking", "Biking", "Scootering")
         val initialMode = speedModeMap[currentSpeed] ?: "Walking"
         val initialPosition = modes.indexOf(initialMode)
+        val accessibilitySwitch = findViewById<Switch>(R.id.Accessibility_switch)
+        val savedAccessibilityMode = sharedPreferences.getBoolean("accessibilityMode", false)
+        accessibilitySwitch.isChecked = savedAccessibilityMode
+
+        accessibilitySwitch.setOnCheckedChangeListener { _, isChecked ->
+            AccessibilityMode = isChecked
+            saveSetting("accessibilityMode", isChecked)
+        }
 
         ArrayAdapter.createFromResource(
             this,
@@ -44,9 +57,8 @@ class SettingPage : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
+                saveSetting("WalkingSpeed", position)
                 val selectedMode = modes[position]
-
-                // 使用反向映射找到对应速度值并更新全局变量
                 val selectedSpeed = modeSpeedMap[selectedMode] ?: 0.083
                 currentSpeed = selectedSpeed
                 Log.d("SettingPage", "Selected speed: $currentSpeed")
@@ -60,6 +72,14 @@ class SettingPage : AppCompatActivity() {
         backButton.setOnClickListener {
             finish()
         }
+    }
+    private fun saveSetting(key: String, value: Any) {
+        val editor = sharedPreferences.edit()
+        when (value) {
+            is Boolean -> editor.putBoolean(key, value)
+            is Int -> editor.putInt(key, value)
+        }
+        editor.apply()
     }
 
 

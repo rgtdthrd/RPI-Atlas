@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerViewResults: RecyclerView
     private lateinit var cardView: CardView
 
-    private var edgeTest = true
     private var isClick = false
 
     // Handler for scheduling tasks
@@ -50,6 +49,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val sharedPreferences = getSharedPreferences("AppSettings", MODE_PRIVATE)
+        AccessibilityMode = sharedPreferences.getBoolean("accessibilityMode", false)
+        val savedSpeedIndex = sharedPreferences.getInt("WalkingSpeed", 0)
+        val speedMap = mapOf(0 to 0.075, 1 to 0.25, 2 to 0.333)
+        currentSpeed = speedMap[savedSpeedIndex] ?: 0.075
 
         val campusMap: ImageView = findViewById(R.id.mapImage)
         val marker: ImageView = findViewById(R.id.markerImage)
@@ -89,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         val displayLandmarkNames = findViewById<DisplayLandmarkNames>(R.id.landmarkView)
         displayLandmarkNames.init(campusMap, landMarkGraph)
 
-        val allEdges = landMarkGraph.getAllEdges()
+
         val allTerms = landMarkGraph.getAllLandmarkNodeNames()
         // val startNode = landMarkGraph.getNodeByName("Barton Hall")!!
         Log.d(
@@ -97,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             "User current location is ${userCurrPosition.first}, ${userCurrPosition.second}",
         )
         // var startNode = landMarkGraph.getClosestNode(userCurrPosition)!!
-        val endNode = landMarkGraph.getNodeByName("Folsom Library")!!
+//        val endNode = landMarkGraph.getNodeByName("Folsom Library")!!
         // val route = landMarkGraph.shortestPath(startNode, endNode)
         // displaying route here using current location defaults
         // to (0,0) as start for some reason
