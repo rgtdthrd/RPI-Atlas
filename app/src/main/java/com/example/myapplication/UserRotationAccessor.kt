@@ -10,12 +10,13 @@ import android.util.Log
 class UserRotationAccessor(
     private val context: Context,
 ) {
-    var sensorManager: SensorManager =
+    private var rotationMatrix = FloatArray(9)
+    private var orientationAngles = FloatArray(3)
+    private var sensorManager: SensorManager =
         context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     var accelerometerReading = FloatArray(3)
     var magnetometerReading = FloatArray(3)
-    var rotationMatrix = FloatArray(9)
-    var orientationAngles = FloatArray(3)
+
 
     // Sensor event listener
     private val rotationEventListener =

@@ -6,7 +6,6 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.widget.ImageView
 import android.view.View
-import android.util.Log
 import android.graphics.Typeface
 
 

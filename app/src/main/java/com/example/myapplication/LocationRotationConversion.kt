@@ -3,7 +3,7 @@ package com.example.myapplication
 import android.util.Log
 import android.widget.ImageView
 
-private val MAP_ORIENTATION_OFFSET = 0.0
+private const val MAP_ORIENTATION_OFFSET = 0.0
 
 private val LOCPOS =
     arrayOf(

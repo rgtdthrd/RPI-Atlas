@@ -11,7 +11,7 @@ import java.io.InputStreamReader
 // where nodes are locations on campus and edges are roads or pathways between locations
 class Graph {
     var nodes = emptyArray<Node>()
-    var edges = emptyArray<Edge>()
+    private var edges = emptyArray<Edge>()
     private var currentRoute: Route? = null
 
     fun addNode(newNode: Node) {
@@ -326,12 +326,6 @@ open class Edge(
         }
     }
 
-    fun update(
-        userLoc: Pair<Double, Double>,
-        container: FrameLayout,
-    ) {
-        edgeView?.update(userLoc, container)
-    }
 
     fun updateSudoNode(newPosition: Pair<Double, Double>) {
         sudoNode.position = newPosition

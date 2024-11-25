@@ -79,10 +79,10 @@ class EdgeView(
                 edge.end.position.first,
                 edge.end.position.second
             )
-            val startX = start.first.toFloat() * mapWidth / IMAGE_WIDTH
-            val startY = start.second.toFloat() * mapHeight / IMAGE_HEIGHT
-            val endX = end.first.toFloat() * mapWidth / IMAGE_WIDTH
-            val endY = end.second.toFloat() * mapHeight / IMAGE_HEIGHT
+            val startX = start.first * mapWidth / IMAGE_WIDTH
+            val startY = start.second * mapHeight / IMAGE_HEIGHT
+            val endX = end.first * mapWidth / IMAGE_WIDTH
+            val endY = end.second * mapHeight / IMAGE_HEIGHT
 
             canvas.drawLine(startX, startY, endX, endY, paint)
         }
