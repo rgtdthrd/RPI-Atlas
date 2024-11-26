@@ -35,11 +35,9 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.latitude_text).text = "Latitude: ${seedNode.position.first}"
         findViewById<TextView>(R.id.longitude_text).text = "Longitude: ${seedNode.position.second}"
 
-        // set up start route button
+        // start route button to begin route to selected landmark
         val startRouteButton = findViewById<Button>(R.id.startRouteButton)
         startRouteButton.setOnClickListener {
-            // commented out for now due to change in startRoute implementation.
-            // graph.startRoute(seedNode)
             val intent = Intent(this, MainActivity::class.java)
             intent.putExtra("routeStarted", true)
             intent.putExtra("nodeName", seedNode.name)

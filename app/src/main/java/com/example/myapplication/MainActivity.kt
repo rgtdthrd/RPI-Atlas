@@ -273,34 +273,26 @@ class MainActivity : AppCompatActivity() {
             super.onSupportNavigateUp()
     }
 
-    // testing getUserLocation
+
     override fun onResume() {
         super.onResume()
         userLocationAccessor.stopLocationUpdates()
         handler.post(updateTask)
 
-        // start route if requested
+        // start route if requested when returning to main map screen
         val routeStarted = intent.getBooleanExtra("routeStarted", false)
         if (routeStarted){
             val nodeName = intent.getStringExtra("nodeName")
-            Log.d("MainActivity", "Starting route to $nodeName")
             val destination = landMarkGraph.getLandmarkNodeByName(nodeName!!)
             val destinationNode = destination?.let { landMarkGraph.getClosestNode(it.position) }
-            val ye = destinationNode!!.name
-            Log.d("MainActivity", "Destination node is $ye")
-            Log.d("MainActivity", "Destination node coordinates: ${destinationNode.position.first}, ${destinationNode.position.second}")
-            Log.d("MainActivity", "Number of nodes in graph: ${landMarkGraph.nodes.size}")
-            Log.d("MainActivity", "Number of edges in graph: ${landMarkGraph.getAllEdges().size}")
-            val userLocationAccesor = UserLocationAccessor(this, this)
-            userLocationAccesor.getUserLocation { coordinates ->
+            val userLocationAccessor = UserLocationAccessor(this, this)
+            userLocationAccessor.getUserLocation { coordinates ->
                 if (coordinates != null) {
                     userCurrPosition = Pair(coordinates.first, coordinates.second)
                     userLoc = convertLocation(coordinates.first, coordinates.second)
                 }
             }
             landMarkGraph.startRoute(destinationNode!!, this, findViewById(R.id.edgeContainer), findViewById(R.id.mapImage))
-            Log.d("MainActivity", "Number of nodes in graph: ${landMarkGraph.nodes.size}")
-            Log.d("MainActivity", "Number of edges in graph: ${landMarkGraph.getAllEdges().size}")
             findViewById<Button>(R.id.endRouteButton).visibility = View.VISIBLE
             intent.removeExtra("routeStarted")
         }
