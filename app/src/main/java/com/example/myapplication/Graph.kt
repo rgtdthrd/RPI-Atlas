@@ -263,14 +263,20 @@ class Graph {
         mapImage: ImageView,
     ) {
         val userLocNode = Node(Pair(userCurrPosition.first, userCurrPosition.second), "Current")
+        Log.d("Graph", "User location is $userLocNode")
         val startNode = getClosestNode(userLocNode.position)
 
         if (startNode != null) {
+            val dName = destination.name
+            val sName = startNode.name
+            Log.d("Graph", "Starting route from $sName to $dName")
             // Hide the currently displayed route if it exists
             currentRoute?.hideRoute(container)
 
             // Calculate and display the new route
             val route = shortestPath(startNode, destination)
+            val routeSize = route.getEdges().size
+            Log.d("Graph", "Route size is $routeSize")
             route.displayRoute(context, container, mapImage)
 
             // Save the new route as the currently displayed one
@@ -365,6 +371,8 @@ open class Route {
         container: FrameLayout,
         mapImage: ImageView,
     ) {
+        Log.d("Route", "Displaying route")
+        Log.d("Route", "Edge size: ${edges.size}")
         for (edge in edges) {
             edge.display(context, container, mapImage)
         }

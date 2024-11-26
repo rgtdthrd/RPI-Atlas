@@ -40,6 +40,10 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
         startRouteButton.setOnClickListener {
             // commented out for now due to change in startRoute implementation.
             // graph.startRoute(seedNode)
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("routeStarted", true)
+            intent.putExtra("nodeName", seedNode.name)
+            startActivity(intent)
             finish()
         }
 

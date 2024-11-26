@@ -99,6 +99,8 @@ class MainActivity : AppCompatActivity() {
             "MainActivity",
             "User current location is ${userCurrPosition.first}, ${userCurrPosition.second}",
         )
+        //val testLocation = landMarkGraph.getNodeByName("Folsom Library")
+        //landMarkGraph.startRoute(testLocation!!, this, edgeContainer, campusMap)
         // var startNode = landMarkGraph.getClosestNode(userCurrPosition)!!
 //        val endNode = landMarkGraph.getNodeByName("Folsom Library")!!
         // val route = landMarkGraph.shortestPath(startNode, endNode)
@@ -266,5 +268,30 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         userLocationAccessor.stopLocationUpdates()
         handler.post(updateTask)
+
+        // start route if requested
+        val routeStarted = intent.getBooleanExtra("routeStarted", false)
+        if (routeStarted){
+            val nodeName = intent.getStringExtra("nodeName")
+            Log.d("MainActivity", "Starting route to $nodeName")
+            val destinationNode = landMarkGraph.getLandmarkNodeByName(nodeName!!)
+            val ye = destinationNode!!.name
+            Log.d("MainActivity", "Destination node is $ye")
+            Log.d("MainActivity", "Destination node coordinates: ${destinationNode.position.first}, ${destinationNode.position.second}")
+            Log.d("MainActivity", "Number of nodes in graph: ${landMarkGraph.nodes.size}")
+            Log.d("MainActivity", "Number of edges in graph: ${landMarkGraph.getAllEdges().size}")
+            val userLocationAccesor = UserLocationAccessor(this, this)
+            userLocationAccesor.getUserLocation { coordinates ->
+                if (coordinates != null) {
+                    userCurrPosition = Pair(coordinates.first, coordinates.second)
+                    userLoc = convertLocation(coordinates.first, coordinates.second)
+                }
+            }
+            landMarkGraph.startRoute(destinationNode!!, this, findViewById(R.id.edgeContainer), findViewById(R.id.mapImage))
+            Log.d("MainActivity", "Number of nodes in graph: ${landMarkGraph.nodes.size}")
+            Log.d("MainActivity", "Number of edges in graph: ${landMarkGraph.getAllEdges().size}")
+            findViewById<Button>(R.id.endRouteButton).visibility = View.VISIBLE
+            intent.removeExtra("routeStarted")
+        }
     }
 }
