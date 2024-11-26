@@ -1,6 +1,6 @@
 # RPI-Atlas
 
-RPI Atlas is an open source mapping mobile application. It is designed to help newly admitted students and students with disabilities navigate the campus of Rensselaer Polytechnic Institute (RPI). Its main features are:
+RPI Atlas is an open source mapping mobile application for Android devices. It is designed to help newly admitted students and students with disabilities navigate the campus of Rensselaer Polytechnic Institute (RPI). Its main features are:
 - Displaying a simplified, scaled map of RPI campus with labeled locations.
 - Accurately retrieving and displaying the user's current location relative to the map.
 - A search functionality allowing users to search for building names and view general information.
