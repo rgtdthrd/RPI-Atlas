@@ -70,6 +70,7 @@ private fun getScaleFactor() {
     scaleFactor = Pair(62828.4066235, -86993.3520537)
 }
 
+// Calculate the dot product of two vectors
 private fun dotProduct(
     a: Pair<Double, Double>,
     b: Pair<Double, Double>,
@@ -120,8 +121,10 @@ fun convertLocation(
     return Pair(newX.toFloat(), newY.toFloat())
 }
 
+// convert cardinal direction to degrees
 fun convertRotation(cardinalRotation: Double): Double = (cardinalRotation - MAP_ORIENTATION_OFFSET) % 360
 
+// Updates the displayed position on the map
 fun displayLocation(
     map: ImageView,
     marker: ImageView,
@@ -144,18 +147,12 @@ fun displayLocation(
     }
 }
 
+// Updates the displayed direction of the arrow on the map
 fun displayRotation(
     map: ImageView,
     arrow: ImageView,
     degrees: Double,
 ) {
-    /*
-    Needed Direction: right = 0.0, up = 90.0, left = 180.0, down = 270.0
-    Given Direction (degrees): 270 = right, 180 = up, 90 = left, 0.0 = down
-    Equation: ((direction) - 360) + 90 = correct direction
-     */
-
     arrow.visibility = ImageView.VISIBLE
-    arrow.rotation = degrees.toFloat() - 90.0f // abs((degrees.toFloat() - 360.0f) + 90.0f)
-    // Log.d("DisplayRotation", "Arrow rotated to: $degrees degrees")
+    arrow.rotation = degrees.toFloat() - 90.0f
 }
