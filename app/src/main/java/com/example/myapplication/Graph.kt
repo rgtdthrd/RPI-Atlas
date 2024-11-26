@@ -330,7 +330,6 @@ open class Edge(
         }
     }
 
-
     fun updateSudoNode(newPosition: Pair<Double, Double>) {
         sudoNode.position = newPosition
     }

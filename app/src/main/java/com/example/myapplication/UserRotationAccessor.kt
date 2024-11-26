@@ -17,7 +17,6 @@ class UserRotationAccessor(
     var accelerometerReading = FloatArray(3)
     var magnetometerReading = FloatArray(3)
 
-
     // Sensor event listener
     private val rotationEventListener =
         object : SensorEventListener {

@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val sharedPreferences = getSharedPreferences("AppSettings", MODE_PRIVATE)
-        AccessibilityMode = sharedPreferences.getBoolean("accessibilityMode", false)
+        accessibilityMode = sharedPreferences.getBoolean("accessibilityMode", false)
         val savedSpeedIndex = sharedPreferences.getInt("WalkingSpeed", 0)
         val speedMap = mapOf(0 to 0.075, 1 to 0.25, 2 to 0.333)
         currentSpeed = speedMap[savedSpeedIndex] ?: 0.075
@@ -92,7 +92,6 @@ class MainActivity : AppCompatActivity() {
         // Display Landmark Names
         val displayLandmarkNames = findViewById<DisplayLandmarkNames>(R.id.landmarkView)
         displayLandmarkNames.init(campusMap, landMarkGraph)
-
 
         val allTerms = landMarkGraph.getAllLandmarkNodeNames()
         // val startNode = landMarkGraph.getNodeByName("Barton Hall")!!

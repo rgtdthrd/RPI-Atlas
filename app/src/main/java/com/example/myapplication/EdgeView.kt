@@ -8,7 +8,8 @@ import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
-import kotlin.math.*
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class EdgeView(
     context: Context,
@@ -23,14 +24,25 @@ class EdgeView(
 
     private lateinit var edge: Edge
     private lateinit var map: ImageView
-    fun init(newEdge: Edge, mapImage: ImageView) {
+
+    fun init(
+        newEdge: Edge,
+        mapImage: ImageView,
+    ) {
         edge = newEdge
         map = mapImage
     }
-    fun update(userLoc: Pair<Double, Double>, container: FrameLayout) {
+
+    fun update(
+        userLoc: Pair<Double, Double>,
+        container: FrameLayout,
+    ) {
         val (newSudoX, newSudoY) = getClosestPointOnEdge(userLoc)
-        val distanceToEnd = sqrt((userLoc.first - edge.end.position.first).pow(2) +
-                (userLoc.second - edge.end.position.second).pow(2))
+        val distanceToEnd =
+            sqrt(
+                (userLoc.first - edge.end.position.first).pow(2) +
+                    (userLoc.second - edge.end.position.second).pow(2),
+            )
         // Determine if the edge has been traversed
         val threshold = 5.0
         if (distanceToEnd < threshold) {
@@ -39,15 +51,13 @@ class EdgeView(
             Log.d("EdgeView", "Edge fully traversed")
         } else {
             edge.updateSudoNode(Pair(newSudoX, newSudoY))
-
         }
         // Redraw the view with updated edges
         invalidate()
     }
+
     // Function to get the closest point on the edge to the user's location
-    private fun getClosestPointOnEdge(
-        userLoc: Pair<Double, Double>,
-    ): Pair<Double, Double> {
+    private fun getClosestPointOnEdge(userLoc: Pair<Double, Double>): Pair<Double, Double> {
         val (x1, y1) = edge.start.position
         val (x2, y2) = edge.end.position
         val (px, py) = userLoc
@@ -64,6 +74,7 @@ class EdgeView(
 
         return Pair(closestX, closestY)
     }
+
     // Function to draw the edges on the map
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -75,10 +86,11 @@ class EdgeView(
                     edge.getSudoNode().position.first,
                     edge.getSudoNode().position.second,
                 )
-            val end = convertLocation(
-                edge.end.position.first,
-                edge.end.position.second
-            )
+            val end =
+                convertLocation(
+                    edge.end.position.first,
+                    edge.end.position.second,
+                )
             val startX = start.first * mapWidth / IMAGE_WIDTH
             val startY = start.second * mapHeight / IMAGE_HEIGHT
             val endX = end.first * mapWidth / IMAGE_WIDTH

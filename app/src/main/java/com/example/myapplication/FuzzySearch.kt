@@ -24,11 +24,12 @@ private fun editDistance(
     var cost: Int
     for (j in 1..n) {
         for (i in 1..m) {
-            cost = if (leftIndex[i - 1] == rightIndex[j - 1]) {
-                0
-            } else {
-                1
-            }
+            cost =
+                if (leftIndex[i - 1] == rightIndex[j - 1]) {
+                    0
+                } else {
+                    1
+                }
             d[i][j] =
                 minOf(
                     d[i - 1][j] + 1,

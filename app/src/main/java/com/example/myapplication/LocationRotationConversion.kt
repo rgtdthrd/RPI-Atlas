@@ -42,7 +42,6 @@ private val COMBOS: Int = TESTSIZE * (TESTSIZE - 1) / 2
 // The scale factor from latitude/longitude to pixels
 private var scaleFactor = Pair(0.0, 0.0)
 
-
 private var referenceLocMap = Pair(0.0, 0.0)
 private var referenceLocPos = Pair(0.0, 0.0)
 const val IMAGE_WIDTH = 1582

@@ -10,7 +10,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import java.math.BigDecimal
 import java.math.RoundingMode
-import kotlin.math.*
+import kotlin.math.acos
+import kotlin.math.cos
+import kotlin.math.roundToInt
+import kotlin.math.sin
 
 private const val EARTHRADIUS = 6366707.0195
 var currentSpeed = 0.075 // in km/min
@@ -62,7 +65,8 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
                     val route = graph.shortestPath(nearestNode, endNode!!)
                     println("Route distance: ${route.calculateDistance()}")
                     val eta = route.calculateDistance() / currentSpeed
-                    findViewById<TextView>(R.id.ETA_text).text = "Estimated Arrival Time: ${ BigDecimal(eta).setScale(2, RoundingMode.HALF_UP).toDouble()} mins"
+                    findViewById<TextView>(R.id.ETA_text).text =
+                        "Estimated Arrival Time: ${ BigDecimal(eta).setScale(2, RoundingMode.HALF_UP).toDouble()} mins"
                 }
 
                 findViewById<TextView>(R.id.distance_text).text =
