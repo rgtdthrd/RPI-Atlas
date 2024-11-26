@@ -129,15 +129,18 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+        // Setup search results list for displaying in the app
         cardView = findViewById(R.id.cardView)
         recyclerViewResults = findViewById(R.id.recyclerView)
         recyclerViewResults.layoutManager = LinearLayoutManager(this)
         resultsAdapter = ResultsAdapter(emptyList())
         recyclerViewResults.adapter = resultsAdapter
 
+        // Updates the search result list as the user types in the search bar
         val searchView: SearchView = findViewById(R.id.searchView)
         searchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
+                // When user first types in to search
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     if (query != null) {
                         val results = fuzzySearch(query, allTerms)
@@ -145,7 +148,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     return true
                 }
-
+                // When user changes edits search query
                 override fun onQueryTextChange(newText: String?): Boolean {
                     // FuzzySearch
                     if (newText != null) {
@@ -156,9 +159,13 @@ class MainActivity : AppCompatActivity() {
                 }
             },
         )
+
+        // Display setting page when user clicks on setting button
         findViewById<ImageButton>(R.id.SettingButton).setOnClickListener {
             displaySettingPage(this)
         }
+
+        // Actions for mouse events
         campusMap.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -171,6 +178,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MotionEvent.ACTION_UP -> {
+                    // Hide the SearchView and keyboard popup when the user clicks outside
                     if (isClick) {
                         v.performClick()
                         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -190,6 +198,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Displays search results
     private fun displayResults(results: Array<String>) {
         if (results.isNotEmpty()) {
             // Update RecyclerView with new results
@@ -205,6 +214,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Display the selected search result information
     fun onSearchResultSelected(selectedName: String) {
         // Find the SearchableNode corresponding to the selected name
         val selectedNode = landMarkGraph.getLandmarkNodeByName(selectedName)

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+// Adapter class for the displaying results onto app, from a list of provided results
 class ResultsAdapter(
     private var resultsList: List<String>,
 ) : RecyclerView.Adapter<ResultsAdapter.ViewHolder>() {
@@ -43,7 +44,7 @@ class ResultsAdapter(
         }
     }
 
-    // Return the size of your data set
+    // Return the size of the results set
     override fun getItemCount(): Int = resultsList.size
 
     // Update the data in the adapter
