@@ -284,7 +284,8 @@ class MainActivity : AppCompatActivity() {
         if (routeStarted){
             val nodeName = intent.getStringExtra("nodeName")
             Log.d("MainActivity", "Starting route to $nodeName")
-            val destinationNode = landMarkGraph.getLandmarkNodeByName(nodeName!!)
+            val destination = landMarkGraph.getLandmarkNodeByName(nodeName!!)
+            val destinationNode = destination?.let { landMarkGraph.getClosestNode(it.position) }
             val ye = destinationNode!!.name
             Log.d("MainActivity", "Destination node is $ye")
             Log.d("MainActivity", "Destination node coordinates: ${destinationNode.position.first}, ${destinationNode.position.second}")
