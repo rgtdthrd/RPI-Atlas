@@ -170,7 +170,7 @@ class Graph {
         return closestNode
     }
 
-    // Dijkstra's to find shortest path between 2 nodes
+    // Dijkstra's to find shortest path between 2 nodes already on the graph (use get closest node if necessary)
     fun shortestPath(
         startNode: Node,
         endNode: Node,
