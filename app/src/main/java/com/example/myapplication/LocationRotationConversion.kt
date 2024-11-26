@@ -5,6 +5,7 @@ import android.widget.ImageView
 
 private const val MAP_ORIENTATION_OFFSET = 0.0
 
+// sample data for real latitude/longitude positions
 private val LOCPOS =
     arrayOf(
         Pair(42.730495, -73.678432),
@@ -18,6 +19,7 @@ private val LOCPOS =
         Pair(42.72688623007297, -73.6736111308174),
     )
 
+// sample data for image x/y positions
 private val LOCMAP =
     arrayOf(
         Pair(587, 749),
@@ -31,9 +33,16 @@ private val LOCMAP =
         Pair(899, 1061),
     )
 
+// number of sample points
 private val TESTSIZE = LOCPOS.size
+
+// number of combinations of sample points
 private val COMBOS: Int = TESTSIZE * (TESTSIZE - 1) / 2
+
+// The scale factor from latitude/longitude to pixels
 private var scaleFactor = Pair(0.0, 0.0)
+
+
 private var referenceLocMap = Pair(0.0, 0.0)
 private var referenceLocPos = Pair(0.0, 0.0)
 const val IMAGE_WIDTH = 1582
@@ -41,6 +50,7 @@ const val IMAGE_HEIGHT = 1285
 const val X_OFFSET = -9.0f
 const val Y_OFFSET = -5.0f
 
+// retrieve the sample points
 private fun getReferencePoints() {
     val locmapToDouble =
         Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
@@ -48,6 +58,7 @@ private fun getReferencePoints() {
     referenceLocPos = meanPoint(LOCPOS)
 }
 
+// calculate the scale factor
 private fun getScaleFactor() {
     /*val LOCMAP_to_Double = Array(TESTSIZE) { i -> LOCMAP[i].first.toDouble() to LOCMAP[i].second.toDouble() }
     val delta1 = DeltaDistance(LOCMAP_to_Double)
@@ -65,6 +76,7 @@ private fun dotProduct(
     b: Pair<Double, Double>,
 ): Double = a.first * b.first + a.second * b.second
 
+// calculate every distance combination in the sample points
 private fun deltaDistance(mypoints: Array<Pair<Double, Double>>): Array<Pair<Double, Double>> {
     val delta = Array(COMBOS) { Pair(0.0, 0.0) }
     var index = 0
@@ -78,6 +90,7 @@ private fun deltaDistance(mypoints: Array<Pair<Double, Double>>): Array<Pair<Dou
     return delta
 }
 
+// calculate the mean of an array of points
 private fun meanPoint(mypoints: Array<Pair<Double, Double>>): Pair<Double, Double> {
     var meanX = 0.0
     var meanY = 0.0
@@ -90,6 +103,7 @@ private fun meanPoint(mypoints: Array<Pair<Double, Double>>): Pair<Double, Doubl
     return Pair(meanX, meanY)
 }
 
+// convert latitude/longitude to pixels
 fun convertLocation(
     latitude: Double,
     longitude: Double,

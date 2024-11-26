@@ -17,7 +17,9 @@ var currentSpeed = 0.075 // in km/min
 private var seedNode = LandmarkNode(Pair(0.0, 0.0), "N/A")
 // private var graph = Graph() // different instance of graph?
 
+// Activity for displaying location info and options
 class LocationInfoAndOptionsActivity : AppCompatActivity() {
+    // get userLocationAccessor so that we can get their location
     private lateinit var userLocationAccessor: UserLocationAccessor
 
     @SuppressLint("SetTextI18n", "MissingInflatedId")
@@ -25,10 +27,12 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.location_info_and_options)
+        // fill out text fields with location info
         findViewById<TextView>(R.id.locationName).text = seedNode.name
         findViewById<TextView>(R.id.latitude_text).text = "Latitude: ${seedNode.position.first}"
         findViewById<TextView>(R.id.longitude_text).text = "Longitude: ${seedNode.position.second}"
 
+        // set up start route button
         val startRouteButton = findViewById<Button>(R.id.startRouteButton)
         startRouteButton.setOnClickListener {
             // commented out for now due to change in startRoute implementation.
@@ -38,6 +42,7 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
 
         val graph: Graph = landMarkGraph
 
+        // set up back button
         val backButton = findViewById<ImageButton>(R.id.backButton)
         backButton.setOnClickListener {
             finish() // Close the activity
@@ -46,6 +51,7 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
 
         // coordinates: user location
         // seedNode: chosen landmark
+        // get the distance between the user and the landmark
         userLocationAccessor.getUserLocation { coordinates ->
             if (coordinates != null) {
                 val nearestNode = graph.getClosestNode(coordinates)
@@ -66,6 +72,7 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
     }
 }
 
+// Calculate the distance between two points on the earth's surface
 fun calculateDistance(
     p1: Pair<Double, Double>,
     p2: Pair<Double, Double>,
@@ -79,6 +86,7 @@ fun calculateDistance(
     return exactDistance.roundToInt() / 1000.0
 }
 
+// Start the location info activity
 fun displayLocationInfo(
     context: Context,
     locationNode: LandmarkNode,

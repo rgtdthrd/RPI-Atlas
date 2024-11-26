@@ -24,6 +24,7 @@ class Graph {
 
     fun getAllEdges(): Array<Edge> = edges
 
+    // Get the names of all landmark nodes
     fun getAllLandmarkNodeNames(): Array<String> {
         var outArray = emptyArray<String>()
         for (node in nodes) {
@@ -34,6 +35,7 @@ class Graph {
         return outArray
     }
 
+    // Get the node with the given name
     fun getNodeByName(name: String): Node? {
         for (node in nodes) {
             if (node.name.equals(name, ignoreCase = true)) {
@@ -43,6 +45,7 @@ class Graph {
         return null
     }
 
+    // Get the landmark node with the given name
     fun getLandmarkNodeByName(name: String): LandmarkNode? {
         for (node in nodes) {
             if (node is LandmarkNode && node.name.equals(name, ignoreCase = true)) {
@@ -151,6 +154,7 @@ class Graph {
         }
     }
 
+    // Find the closest node to a given position
     fun getClosestNode(position: Pair<Double, Double>): Node? {
         if (nodes.isEmpty()) return null // Return null if there are no nodes in the graph
         var closestNode: Node? = null
