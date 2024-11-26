@@ -175,87 +175,84 @@ class Graph {
         startNode: Node,
         endNode: Node,
     ): Route {
-        // Maps each node to the shortest distance from the start node, defaulting to infinity
+        // Maps to store the shortest distance from the startNode to each node.
         val distances = mutableMapOf<Node, Double>().withDefault { Double.POSITIVE_INFINITY }
-
-        // Keeps track of the previous edge leading to each node for path reconstruction
+        // Maps to keep track of the previous node (or edge) in the shortest path to reconstruct it later.
         val previousNodes = mutableMapOf<Node, Edge?>()
-
-        // Tracks nodes that have already been visited
+        // Set of nodes already visited to prevent reprocessing.
         val visited = mutableSetOf<Node>()
-
-        // Priority queue for selecting the node with the shortest known distance
+        // Priority queue to process nodes in the order of their current shortest distance.
         val priorityQueue = java.util.PriorityQueue(compareBy<Pair<Node, Double>> { it.second })
 
-        // Initialize start node's distance to 0 and add it to the queue
+        // Initialize the start node with a distance of 0.
         distances[startNode] = 0.0
         priorityQueue.add(Pair(startNode, 0.0))
 
-        // Main loop: process nodes in order of distance from the start node
+        // Dijkstra's algorithm main loop: process nodes until the queue is empty.
         while (priorityQueue.isNotEmpty()) {
-            // Get the node with the smallest distance in the queue
+            // Dequeue the node with the smallest distance.
             val (currentNode, currentDistance) = priorityQueue.poll()!!
 
-            // Skip this node if it’s already been visited
+            // Skip processing if this node was already visited.
             if (visited.contains(currentNode)) continue
             visited.add(currentNode)
 
-            // Stop if we've reached the end node
+            // If we reached the target node, stop processing.
             if (currentNode == endNode) break
 
-            // Iterate over all edges to find neighbors, treating each edge as bidirectional
+            // Iterate over all edges in the graph to find neighbors of the current node.
             for (edge in edges) {
-                // Create pairs for both directions of the edge: (start -> end) and (end -> start)
+                // Each edge connects two nodes, so consider both directions.
                 val neighbors =
                     listOf(
                         edge.start to edge.end,
                         edge.end to edge.start,
                     )
 
-                // Check each direction (from -> to) to find unvisited neighbors
+                // Check each direction to find valid neighbors of the current node.
                 for ((from, to) in neighbors) {
-                    // If the current node is the start of this edge and the end is unvisited
+                    // If the current edge starts from this node and the neighbor isn't visited yet:
                     if (from == currentNode && !visited.contains(to)) {
-                        // Calculate the new distance to this neighbor
+                        // Skip edges marked as inaccessible if accessibility mode is enabled.
+                        if (accessibilityMode && edge.accessible.equals("FALSE", ignoreCase = true)) {
+                            continue
+                        }
+
+                        // Calculate the tentative distance to the neighbor through this edge.
                         val newDistance = currentDistance + edge.weight
 
-                        // If this path to 'to' is shorter, update distances and previousNodes
+                        // Update the shortest distance and the previous node if the new path is shorter.
                         if (newDistance < distances.getValue(to)) {
-                            distances[to] =
-                                newDistance // Update shortest distance to this node
-                            previousNodes[to] = edge // Record the edge leading to this node
-                            priorityQueue.add(
-                                Pair(
-                                    to,
-                                    newDistance,
-                                ),
-                            ) // Add the neighbor to the queue
+                            distances[to] = newDistance
+                            previousNodes[to] = edge
+                            // Add the neighbor to the priority queue with its updated distance.
+                            priorityQueue.add(Pair(to, newDistance))
                         }
                     }
                 }
             }
         }
 
-        // Reconstruct the shortest path by backtracking from the end node
+        // Reconstruct the shortest path from the `previousNodes` map.
         val route = Route()
         var currentNode: Node? = endNode
 
-        // Follow previous nodes from end node to start node, adding each edge to the route
         while (currentNode != null && previousNodes[currentNode] != null) {
+            // Retrieve the edge that led to the current node.
             val edge = previousNodes[currentNode]
             if (edge != null) {
-                route.addEdge(edge) // Add the edge to the route
-                // Move to the previous node, based on the direction of the edge
+                // Add the edge to the route and backtrack to the previous node.
+                route.addEdge(edge)
                 currentNode = if (edge.start == currentNode) edge.end else edge.start
             }
         }
 
-        // Reverse the collected edges to get the path from start to end
+        // Reverse the order of edges to match the path from start to end.
         val reversedEdges = route.getEdges().toMutableList()
         reversedEdges.reverse()
         route.setEdges(reversedEdges)
 
-        // Return the constructed route with the shortest path
+        // Return the reconstructed route.
         return route
     }
 

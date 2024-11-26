@@ -23,6 +23,7 @@ class GraphTest {
             listOf(
                 Node(Pair(11.0, 21.0), "Node A"),
                 Node(Pair(16.0, 26.0), "Node B"),
+                Node(Pair(16.0, 26.0), "Node C"),
             )
 
         for (landmark in landmarks) {
@@ -38,18 +39,35 @@ class GraphTest {
             Edge(
                 start = graph.getNodeByName("Landmark A")!!,
                 end = graph.getNodeByName("Node A")!!,
+                accessible = "TRUE",
             ),
         )
         graph.addEdge(
             Edge(
                 start = graph.getNodeByName("Landmark B")!!,
                 end = graph.getNodeByName("Node B")!!,
+                accessible = "FALSE",
+            ),
+        )
+        graph.addEdge(
+            Edge(
+                start = graph.getNodeByName("Landmark B")!!,
+                end = graph.getNodeByName("Node C")!!,
+                accessible = "TRUE",
             ),
         )
         graph.addEdge(
             Edge(
                 start = graph.getNodeByName("Node A")!!,
                 end = graph.getNodeByName("Node B")!!,
+                accessible = "FALSE",
+            ),
+        )
+        graph.addEdge(
+            Edge(
+                start = graph.getNodeByName("Node A")!!,
+                end = graph.getNodeByName("Node C")!!,
+                accessible = "TRUE",
             ),
         )
     }
@@ -58,10 +76,10 @@ class GraphTest {
     fun testAddNode() {
         val newNode = Node(Pair(5.0, 6.0), "Node C")
         graph.addNode(newNode)
-        for (node in graph.nodes) {
-            println("Name: ${node.name}, Position: (${node.position.first}, ${node.position.second})")
-        }
-        assertEquals(5, graph.nodes.size)
+//        for (node in graph.nodes) {
+//            println("Name: ${node.name}, Position: (${node.position.first}, ${node.position.second})")
+//        }
+        assertEquals(6, graph.nodes.size)
         assertEquals("Node C", graph.nodes[4].name)
     }
 
@@ -86,21 +104,33 @@ class GraphTest {
     }
 
     @Test
-    fun testShortestPath() {
+    fun testShortestPathAccessFalse() {
+        val currAccess = accessibilityMode
+        accessibilityMode = false
         val startNode = graph.getNodeByName("Landmark A")!!
         val endNode = graph.getNodeByName("Landmark B")!!
         val route = graph.shortestPath(startNode, endNode)
-        for (edge in route.getEdges()) {
-            println(
-                "Edge from ${edge.start.name} at (${edge.start.position.first}, ${edge.start.position.second}) " +
-                    "to ${edge.end.name} at (${edge.end.position.first}, ${edge.end.position.second}), " +
-                    "Weight: ${edge.weight}",
-            )
-        }
+        route.printRoute()
+        accessibilityMode = currAccess
         assertNotNull(route)
         assertEquals(3, route.getEdges().size) // Assuming 1 edge exists between these two nodes
         assertEquals("Landmark A", route.getEdges()[0].start.name)
         assertEquals("Node B", route.getEdges()[2].end.name)
+    }
+
+    @Test
+    fun testShortestPathAccessTrue() {
+        val currAccess = accessibilityMode
+        accessibilityMode = true
+        val startNode = graph.getNodeByName("Landmark A")!!
+        val endNode = graph.getNodeByName("Landmark B")!!
+        val route = graph.shortestPath(startNode, endNode)
+        route.printRoute()
+        accessibilityMode = currAccess
+        assertNotNull(route)
+        assertEquals(3, route.getEdges().size) // Assuming 1 edge exists between these two nodes
+        assertEquals("Landmark A", route.getEdges()[0].start.name)
+        assertEquals("Node C", route.getEdges()[2].end.name)
     }
 
     // fill in later if necessary
