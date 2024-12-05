@@ -43,7 +43,6 @@ class ResultsAdapter(
             (it.context as? MainActivity)?.onSearchResultSelected(resultName)
         }
     }
-
     // Return the size of the results set
     override fun getItemCount(): Int = resultsList.size
 

@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +12,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -25,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.databinding.ActivityMainBinding
 
+private const val MARKER_SCALE = 2.0f
 var userCurrPosition = Pair(0.0, 0.0)
 var landMarkGraph = Graph()
 
@@ -44,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var updateTask: Runnable // Declare the task
     private var userLoc: Pair<Float, Float> = Pair(0.0f, 0.0f)
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "DiscouragedPrivateApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -58,6 +61,17 @@ class MainActivity : AppCompatActivity() {
         val campusMap: ImageView = findViewById(R.id.mapImage)
         val marker: ImageView = findViewById(R.id.markerImage)
         val edgeContainer: FrameLayout = findViewById(R.id.edgeContainer)
+
+        // initialize marker icon scale and pivot after layout parameters are fully applied
+        marker.post {
+            marker.scaleX = MARKER_SCALE
+            marker.scaleY = MARKER_SCALE
+            marker.pivotX = marker.width / 2f
+            marker.pivotY = marker.height / 2.8f
+        }
+        marker.bringToFront()
+
+
         // initialize graph
         val landmarkList = landMarkGraph.parseLandmarksFromCSV(this, R.raw.landmarkdata)
         for (landmark in landmarkList) {
@@ -118,16 +132,15 @@ class MainActivity : AppCompatActivity() {
                             // Update test location and rotation
                             userCurrPosition = Pair(coordinates.first, coordinates.second)
                             userLoc = convertLocation(coordinates.first, coordinates.second)
-                            Log.d("LocationTest", "User is at ${userLoc.first}, ${userLoc.second}")
+                            //Log.d("LocationTest", "User is at ${userLoc.first}, ${userLoc.second}")
                             displayLocation(campusMap, marker, userLoc.first, userLoc.second)
                             val testRot = convertRotation(userRotationAccessor.getUserRotation())
                             // Log.d("UpdateTask", "User is facing $testRot degrees from East")
                             displayRotation(campusMap, marker, testRot)
                         }
                     }
-
-                    // Schedule the next run in 3 seconds (5000 milliseconds)
-                    handler.postDelayed(this, 3000)
+                    // Schedule the next run in 0.05 seconds (50 milliseconds)
+                    handler.postDelayed(this, 50)
                 }
             }
 
@@ -144,7 +157,11 @@ class MainActivity : AppCompatActivity() {
             object : SearchView.OnQueryTextListener {
                 // When user first types in to search
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    if (query != null) {
+                    if (query.isNullOrEmpty()) {
+                        recyclerViewResults.visibility = View.GONE
+                        cardView.visibility = View.GONE
+                    }
+                    else {
                         val results = fuzzySearch(query, allTerms)
                         displayResults(results)
                     }
@@ -153,7 +170,11 @@ class MainActivity : AppCompatActivity() {
                 // When user changes edits search query
                 override fun onQueryTextChange(newText: String?): Boolean {
                     // FuzzySearch
-                    if (newText != null) {
+                    if (newText.isNullOrEmpty()) {
+                        recyclerViewResults.visibility = View.GONE
+                        cardView.visibility = View.GONE
+                    }
+                    else {
                         val results = fuzzySearch(newText, allTerms)
                         displayResults(results)
                     }
@@ -161,6 +182,38 @@ class MainActivity : AppCompatActivity() {
                 }
             },
         )
+
+        try {
+            // Use reflection to access the private `EditText` inside the SearchView framework
+            // May not work in later android versions - hence the try/catch to prevent crash
+            // and to default back to only light gray text.
+            val searchAutoCompleteField = android.widget.SearchView::class.java.getDeclaredField("mSearchSrcTextView")
+            searchAutoCompleteField.isAccessible = true
+            val searchEditText = searchAutoCompleteField.get(searchView) as EditText
+
+            // Set the text color (for user-entered text) and hint text color (for the placeholder text)
+            searchEditText.setTextColor(Color.BLACK)
+            searchEditText.setHintTextColor(Color.LTGRAY)
+        } catch (e: NoSuchFieldException) {
+            e.printStackTrace()
+            Log.e("MainActivity", "Failed to access mSearchSrcTextView")
+        } catch (e: IllegalAccessException) {
+            e.printStackTrace()
+            Log.e("MainActivity", "Failed to access SearchView's EditText")
+        }
+
+
+        // If search view is in focus, show results currently being queried
+        searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                // Check if there's a query in the SearchView
+                val query = searchView.query.toString()
+                if (query.isNotEmpty()) {
+                    val results = fuzzySearch(query, allTerms)
+                    displayResults(results)
+                }
+            }
+        }
 
         // Display setting page when user clicks on setting button
         findViewById<ImageButton>(R.id.SettingButton).setOnClickListener {
@@ -181,14 +234,11 @@ class MainActivity : AppCompatActivity() {
 
                 MotionEvent.ACTION_UP -> {
                     // Hide the SearchView and keyboard popup when the user clicks outside
-                    if (isClick) {
-                        v.performClick()
-                        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                        imm.hideSoftInputFromWindow(searchView.windowToken, 0)
-                        recyclerViewResults.visibility = View.GONE
-                        cardView.visibility = View.GONE
-                    }
-
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(searchView.windowToken, 0)
+                    recyclerViewResults.visibility = View.GONE
+                    cardView.visibility = View.GONE
+                    searchView.clearFocus()
                     Log.d("MainActivity", "Touch released")
                 }
 

@@ -15,7 +15,7 @@ import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-private const val EARTHRADIUS = 6366707.0195
+private const val EARTH_RADIUS = 6366707.0195
 var currentSpeed = 0.075 // in km/min
 private var seedNode = LandmarkNode(Pair(0.0, 0.0), "N/A")
 // private var graph = Graph() // different instance of graph?
@@ -88,7 +88,7 @@ fun calculateDistance(
     val lat2 = Math.toRadians(p2.first)
     val lon2 = Math.toRadians(p2.second)
     val exactDistance =
-        acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1)) * EARTHRADIUS
+        acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1)) * EARTH_RADIUS
     return exactDistance.roundToInt() / 1000.0
 }
 

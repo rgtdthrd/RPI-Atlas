@@ -141,9 +141,9 @@ fun displayLocation(
     if (markerXScale in 0.0f..mapScaleX && markerYScale in 0.0f..mapScaleY) {
         marker.x = markerXScale * xPos + X_OFFSET
         marker.y = markerYScale * yPos + Y_OFFSET
-        Log.d("DisplayLocation", "Marker placed at: $xPos, $yPos")
+        //Log.d("DisplayLocation", "Marker placed at: $xPos, $yPos")
     } else {
-        Log.d("DisplayLocation", "Marker position out of bounds: $xPos, $yPos")
+        //Log.d("DisplayLocation", "Marker position out of bounds: $xPos, $yPos")
     }
 }
 
