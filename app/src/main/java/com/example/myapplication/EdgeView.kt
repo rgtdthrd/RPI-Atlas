@@ -2,12 +2,14 @@ package com.example.myapplication
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import com.google.firebase.database.collection.LLRBNode
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -18,8 +20,9 @@ class EdgeView(
     // Visual properties of the edge
     private val paint =
         Paint().apply {
-            color = android.graphics.Color.RED
+            color = android.graphics.Color.parseColor("#21A675")
             strokeWidth = 10f
+            isAntiAlias = true
         }
 
     private lateinit var edge: Edge

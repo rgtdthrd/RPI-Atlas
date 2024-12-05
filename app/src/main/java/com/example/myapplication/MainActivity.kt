@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resultsAdapter: ResultsAdapter
     private lateinit var recyclerViewResults: RecyclerView
     private lateinit var cardView: CardView
-
+    private lateinit var marker: ImageView
     private var isClick = false
 
     // Handler for scheduling tasks
@@ -58,7 +58,6 @@ class MainActivity : AppCompatActivity() {
         val campusMap: ImageView = findViewById(R.id.mapImage)
         val marker: ImageView = findViewById(R.id.markerImage)
         val edgeContainer: FrameLayout = findViewById(R.id.edgeContainer)
-        marker.bringToFront()
         // initialize graph
         val landmarkList = landMarkGraph.parseLandmarksFromCSV(this, R.raw.landmarkdata)
         landMarkGraph.parseNodesFromCSV(this, R.raw.nodedata)
@@ -293,6 +292,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             landMarkGraph.startRoute(destinationNode!!, this, findViewById(R.id.edgeContainer), findViewById(R.id.mapImage))
+            findViewById<ImageView>(R.id.markerImage).bringToFront()
             findViewById<Button>(R.id.endRouteButton).visibility = View.VISIBLE
             intent.removeExtra("routeStarted")
         }
