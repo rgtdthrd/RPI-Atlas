@@ -143,6 +143,7 @@ class Graph {
                         addEdge(edge)
                     } else {
                         // Handle the case where a node was not found
+                        Log.d("Graph", "This is nodeName1: $nodeName1 and nodeName2: $nodeName2")
                         println("Error: One or both of the nodes were not found.")
                     }
                 }
@@ -162,6 +163,9 @@ class Graph {
         // check all nodes for distance, then return the closest one
         for (node in nodes) {
             val distance = calculateDistance(position, node.position)
+            if(distance < 0.0){
+                Log.d("Graph", "Distance for node ${node.name} is negative: $distance")
+            }
             if (distance < minDistance) {
                 minDistance = distance
                 closestNode = node

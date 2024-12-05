@@ -60,12 +60,13 @@ class MainActivity : AppCompatActivity() {
         val edgeContainer: FrameLayout = findViewById(R.id.edgeContainer)
         // initialize graph
         val landmarkList = landMarkGraph.parseLandmarksFromCSV(this, R.raw.landmarkdata)
-        landMarkGraph.parseNodesFromCSV(this, R.raw.nodedata)
-        landMarkGraph.parseEdgesFromCSV(this, R.raw.edgedata)
-        // LandMarkGraph.ParseEdgesFromCSV(this, R.raw.edgedata)
         for (landmark in landmarkList) {
             landMarkGraph.addNode(landmark)
         }
+        landMarkGraph.parseNodesFromCSV(this, R.raw.nodedata)
+        landMarkGraph.parseEdgesFromCSV(this, R.raw.edgedata)
+        // LandMarkGraph.ParseEdgesFromCSV(this, R.raw.edgedata)
+
 
         val endRouteButton = findViewById<Button>(R.id.endRouteButton)
         endRouteButton.setOnClickListener {
