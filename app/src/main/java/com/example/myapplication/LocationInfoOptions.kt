@@ -87,9 +87,14 @@ fun calculateDistance(
     val lon1 = Math.toRadians(p1.second)
     val lat2 = Math.toRadians(p2.first)
     val lon2 = Math.toRadians(p2.second)
-    val exactDistance =
-        acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1)) * EARTH_RADIUS
-    return exactDistance.roundToInt() / 1000.0
+
+    val cosTheta = sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1)
+
+    // Clamp the value to the range [-1, 1] to avoid NaN
+    val clampedCosTheta = cosTheta.coerceIn(-1.0, 1.0)
+
+    val exactDistance = acos(clampedCosTheta) * EARTH_RADIUS
+    return (exactDistance.roundToInt() / 1000.0)
 }
 
 // Start the location info activity
