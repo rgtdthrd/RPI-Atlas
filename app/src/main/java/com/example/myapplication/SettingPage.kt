@@ -67,6 +67,13 @@ class SettingPage : AppCompatActivity() {
                     val selectedSpeed = modeSpeedMap[selectedMode] ?: 0.083
                     currentSpeed = selectedSpeed
                     Log.d("SettingPage", "Selected speed: $currentSpeed")
+
+                    // Automatically enable Accessibility Mode for Biking or Scootering
+                    if (selectedMode == "Biking" || selectedMode == "Scootering") {
+                        if (!accessibilitySwitch.isChecked) {
+                            accessibilitySwitch.isChecked = true
+                        }
+                    }
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
