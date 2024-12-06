@@ -71,7 +71,6 @@ class MainActivity : AppCompatActivity() {
         }
         marker.bringToFront()
 
-
         // initialize graph
         val landmarkList = landMarkGraph.parseLandmarksFromCSV(this, R.raw.landmarkdata)
         for (landmark in landmarkList) {
@@ -80,7 +79,6 @@ class MainActivity : AppCompatActivity() {
         landMarkGraph.parseNodesFromCSV(this, R.raw.nodedata)
         landMarkGraph.parseEdgesFromCSV(this, R.raw.edgedata)
         // LandMarkGraph.ParseEdgesFromCSV(this, R.raw.edgedata)
-
 
         val endRouteButton = findViewById<Button>(R.id.endRouteButton)
         endRouteButton.setOnClickListener {
@@ -113,8 +111,8 @@ class MainActivity : AppCompatActivity() {
             "MainActivity",
             "User current location is ${userCurrPosition.first}, ${userCurrPosition.second}",
         )
-        //val testLocation = landMarkGraph.getNodeByName("Folsom Library")
-        //landMarkGraph.startRoute(testLocation!!, this, edgeContainer, campusMap)
+        // val testLocation = landMarkGraph.getNodeByName("Folsom Library")
+        // landMarkGraph.startRoute(testLocation!!, this, edgeContainer, campusMap)
         // var startNode = landMarkGraph.getClosestNode(userCurrPosition)!!
 //        val endNode = landMarkGraph.getNodeByName("Folsom Library")!!
         // val route = landMarkGraph.shortestPath(startNode, endNode)
@@ -132,7 +130,7 @@ class MainActivity : AppCompatActivity() {
                             // Update test location and rotation
                             userCurrPosition = Pair(coordinates.first, coordinates.second)
                             userLoc = convertLocation(coordinates.first, coordinates.second)
-                            //Log.d("LocationTest", "User is at ${userLoc.first}, ${userLoc.second}")
+                            // Log.d("LocationTest", "User is at ${userLoc.first}, ${userLoc.second}")
                             displayLocation(campusMap, marker, userLoc.first, userLoc.second)
                             val testRot = convertRotation(userRotationAccessor.getUserRotation())
                             // Log.d("UpdateTask", "User is facing $testRot degrees from East")
@@ -140,7 +138,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     // Schedule the next run in 0.05 seconds (50 milliseconds)
-                    handler.postDelayed(this, 50)
+                    handler.postDelayed(this, 2000)
                 }
             }
 
@@ -160,21 +158,20 @@ class MainActivity : AppCompatActivity() {
                     if (query.isNullOrEmpty()) {
                         recyclerViewResults.visibility = View.GONE
                         cardView.visibility = View.GONE
-                    }
-                    else {
+                    } else {
                         val results = fuzzySearch(query, allTerms)
                         displayResults(results)
                     }
                     return true
                 }
+
                 // When user changes edits search query
                 override fun onQueryTextChange(newText: String?): Boolean {
                     // FuzzySearch
                     if (newText.isNullOrEmpty()) {
                         recyclerViewResults.visibility = View.GONE
                         cardView.visibility = View.GONE
-                    }
-                    else {
+                    } else {
                         val results = fuzzySearch(newText, allTerms)
                         displayResults(results)
                     }
@@ -201,7 +198,6 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
             Log.e("MainActivity", "Failed to access SearchView's EditText")
         }
-
 
         // If search view is in focus, show results currently being queried
         searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
@@ -323,7 +319,6 @@ class MainActivity : AppCompatActivity() {
             super.onSupportNavigateUp()
     }
 
-
     override fun onResume() {
         super.onResume()
         userLocationAccessor.stopLocationUpdates()
@@ -331,7 +326,7 @@ class MainActivity : AppCompatActivity() {
 
         // start route if requested when returning to main map screen
         val routeStarted = intent.getBooleanExtra("routeStarted", false)
-        if (routeStarted){
+        if (routeStarted) {
             val nodeName = intent.getStringExtra("nodeName")
             val destination = landMarkGraph.getLandmarkNodeByName(nodeName!!)
             val destinationNode = destination?.let { landMarkGraph.getClosestNode(it.position) }
