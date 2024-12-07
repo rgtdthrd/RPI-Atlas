@@ -14,8 +14,15 @@ class UserRotationAccessor(
     private var orientationAngles = FloatArray(3)
     private var sensorManager: SensorManager =
         context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    var accelerometerReading = FloatArray(3)
-    var magnetometerReading = FloatArray(3)
+    private var accelerometerReading = FloatArray(3)
+    private var magnetometerReading = FloatArray(3)
+    private var smoothedAccelerometerReading = FloatArray(3)
+    private var smoothedMagnetometerReading = FloatArray(3)
+
+    // Smoothing factor for the low-pass filter (0 < alpha <= 1),
+    // higher values (e.g., 0.2) for faster responsiveness or
+    // lower values (e.g., 0.05) for more stability.
+    private val alpha = 0.1f
 
     // Sensor event listener
     private val rotationEventListener =
@@ -24,17 +31,17 @@ class UserRotationAccessor(
                 when (event.sensor.type) {
                     Sensor.TYPE_ACCELEROMETER -> {
                         accelerometerReading = event.values
-                        // Log.d("UserRotation", "Accelerometer reading: ${accelerometerReading.joinToString()}")
+                        smoothedAccelerometerReading = lowPassFilter(accelerometerReading, smoothedAccelerometerReading)
                     }
 
                     Sensor.TYPE_MAGNETIC_FIELD -> {
                         magnetometerReading = event.values
-                        // Log.d("UserRotation", "Magnetometer reading: ${magnetometerReading.joinToString()}")
+                        smoothedMagnetometerReading = lowPassFilter(magnetometerReading, smoothedMagnetometerReading)
                     }
                 }
 
                 // Check if both readings are valid before calculating the rotation
-                if (accelerometerReading.isNotEmpty() && magnetometerReading.isNotEmpty()) {
+                if (smoothedAccelerometerReading.isNotEmpty() && smoothedMagnetometerReading.isNotEmpty()) {
                     getUserRotation()
                 }
             }
@@ -68,13 +75,27 @@ class UserRotationAccessor(
         }
     }
 
+    // Function to apply a low-pass filter to smooth sensor data
+    private fun lowPassFilter(
+        input: FloatArray,
+        output: FloatArray,
+    ): FloatArray {
+        if (output.isEmpty()) {
+            return input
+        }
+        for (i in input.indices) {
+            output[i] = output[i] + alpha * (input[i] - output[i])
+        }
+        return output
+    }
+
     // Function to get the user's facing direction in degrees from East
     fun getUserRotation(): Double {
         SensorManager.getRotationMatrix(
             rotationMatrix,
             null,
-            accelerometerReading,
-            magnetometerReading,
+            smoothedAccelerometerReading,
+            smoothedMagnetometerReading,
         )
         SensorManager.getOrientation(rotationMatrix, orientationAngles)
 
@@ -86,7 +107,6 @@ class UserRotationAccessor(
         // and using % 360 confines it to a 0-360 degree range.
         val directionFromEast = (azimuthInDegrees - 90 + 360) % 360
 
-        // Log.d("UserRotation", "User is facing $directionFromEast degrees from East")
         return directionFromEast
     }
 
