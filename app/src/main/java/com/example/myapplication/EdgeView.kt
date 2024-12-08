@@ -20,7 +20,7 @@ class EdgeView(
     // Visual properties of the edge
     private val paint =
         Paint().apply {
-            color = android.graphics.Color.parseColor("#21A675")
+            color = android.graphics.Color.RED
             strokeWidth = 10f
             isAntiAlias = true
         }
