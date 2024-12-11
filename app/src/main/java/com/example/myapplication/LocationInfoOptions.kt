@@ -65,8 +65,8 @@ class LocationInfoAndOptionsActivity : AppCompatActivity() {
                     println("NearNode is ${nearestNode.name}")
                     println("seedNode is ${seedNode.name}")
                     val route = graph.shortestPath(nearestNode, endNode!!)
-                    println("Route distance: ${route.calculateDistance()}")
-                    val eta = route.calculateDistance() / currentSpeed
+                    println("Route distance: ${route.totalDistance()}")
+                    val eta = route.totalDistance() / currentSpeed
                     findViewById<TextView>(R.id.ETA_text).text =
                         "Estimated Arrival Time: ${ BigDecimal(eta).setScale(2, RoundingMode.HALF_UP).toDouble()} mins"
                 }

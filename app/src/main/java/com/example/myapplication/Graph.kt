@@ -163,7 +163,7 @@ class Graph {
         // check all nodes for distance, then return the closest one
         for (node in nodes) {
             val distance = calculateDistance(position, node.position)
-            if(distance < 0.0){
+            if (distance < 0.0) {
                 Log.d("Graph", "Distance for node ${node.name} is negative: $distance")
             }
             if (distance < minDistance) {
@@ -388,7 +388,7 @@ open class Route {
         }
     }
 
-    fun calculateDistance(): Double {
+    fun totalDistance(): Double {
         var distance = 0.0
         for (edge in edges) {
             distance += edge.weight
